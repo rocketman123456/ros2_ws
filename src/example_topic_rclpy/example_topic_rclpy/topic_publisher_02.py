@@ -1,27 +1,36 @@
-#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
 
-class NodePublisher02(Node):
-    def __init__(self, name):
-        super().__init__(name)
-        self.get_logger().info("大家好，我是%s!" % name)
-        self.m_command_publisher = self.create_publisher(String, "command", 10)
-        self.m_timer = self.create_timer(0.5, self.timer_callback)
+from tutorial_interfaces.msg import Num    # CHANGE
+
+
+class MinimalPublisher(Node):
+
+    def __init__(self):
+        super().__init__('minimal_publisher')
+        self.publisher_ = self.create_publisher(Num, 'topic', 10)     # CHANGE
+        timer_period = 0.5
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.i = 0
 
     def timer_callback(self):
-        """
-        定时器回调函数
-        """
-        msg = String()
-        msg.data = 'backup'
-        self.m_command_publisher.publish(msg)
-        self.get_logger().info(f'发布了指令：{msg.data}')  # 打印一下发布的数据
+        msg = Num()                                           # CHANGE
+        msg.num = self.i                                      # CHANGE
+        self.publisher_.publish(msg)
+        self.get_logger().info('Publishing: "%d"' % msg.num)  # CHANGE
+        self.i += 1
 
 
 def main(args=None):
-    rclpy.init(args=args)  # 初始化rclpy
-    node = NodePublisher02("topic_publisher_02")  # 新建一个节点
-    rclpy.spin(node)  # 保持节点运行，检测是否收到退出指令（Ctrl+C）
-    rclpy.shutdown()  # 关闭rclpy
+    rclpy.init(args=args)
+
+    minimal_publisher = MinimalPublisher()
+
+    rclpy.spin(minimal_publisher)
+
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

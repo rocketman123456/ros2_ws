@@ -20,8 +20,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            "topic_publisher_01 = example_topic_rclpy.topic_publisher_01:main",
+            "topic_subscribe_01 = example_topic_rclpy.topic_subscribe_01:main",
             "topic_publisher_02 = example_topic_rclpy.topic_publisher_02:main",
-            "topic_subscribe_02 = example_topic_rclpy.topic_subscribe_02:main"
+            "topic_subscribe_02 = example_topic_rclpy.topic_subscribe_02:main",
         ],
     },
 )
