@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(example_parameters_cpp)
+project(polygon_base)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,14 +17,25 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
+find_package(pluginlib REQUIRED)
 
-add_executable(minimal_param_node src/cpp_parameters_node.cpp)
-ament_target_dependencies(minimal_param_node rclcpp)
+add_executable(area_node src/area_node.cpp)
+target_include_directories(area_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(
+  area_node
+  "pluginlib"
+)
 
-install(TARGETS
-  minimal_param_node
+install(TARGETS area_node
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
 if(BUILD_TESTING)
@@ -37,5 +48,9 @@ if(BUILD_TESTING)
   #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+ament_export_include_directories(
+  include
+)
 
 ament_package()
