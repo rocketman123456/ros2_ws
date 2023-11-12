@@ -15,11 +15,13 @@ setup(
     zip_safe=True,
     maintainer='rocketsky',
     maintainer_email='759094438@qq.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Python client server tutorial',
+    license='Apache License 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'service = example_srvcli_py.service_member_function:main',
+            'client = example_srvcli_py.client_member_function:main',
         ],
     },
 )
