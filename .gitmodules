@@ -1,0 +1,3 @@
+[submodule "src/humanoid_motor_control_cpp/third_party/pybind11"]
+	path = src/humanoid_motor_control_cpp/third_party/pybind11
+	url = https://gitee.com/mysticalwing/pybind11.git
