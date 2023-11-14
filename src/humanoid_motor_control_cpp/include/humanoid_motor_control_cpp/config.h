@@ -1,5 +1,4 @@
-#ifndef _Config_H_
-#define _Config_H_
+#pragma once
 
 //电机类型 
 #define MOTOR_TYPE 0 //暂时均为0
@@ -20,10 +19,10 @@
 #define FOOTSENSOR1  0x01
 #define FOOTSENSOR2  0x02
 
+#define SPI_SPEED 6000000
+#define PI 3.1415926
+
+#define ERROR_TRANSFER_DATA 0xffffaaaa
+
 //调试开关
 // #define DEBUG 
-// #define RX_DEBUG
-// #define TX_DEBUG
-// #define PARSE_DEBUG
-
-#endif // !_Config_H_

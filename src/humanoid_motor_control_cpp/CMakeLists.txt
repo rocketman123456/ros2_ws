@@ -25,6 +25,7 @@ add_library(humanoid_motor_control_cpp
   src/ankle_ik.cpp
   src/motor_control.cpp
   src/motor_driver.cpp
+  src/spi_utils.cpp
 )
 
 install(TARGETS humanoid_motor_control_cpp

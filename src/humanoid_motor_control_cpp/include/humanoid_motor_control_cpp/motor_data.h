@@ -5,6 +5,31 @@
 
 namespace pi
 {
+    struct alignas(1) imu_t
+    {
+        int16_t acc_x {0};
+        int16_t acc_y {0};
+        int16_t acc_z {0};
+        int16_t ang_vel_x {0};
+        int16_t ang_vel_y {0};
+        int16_t ang_vel_z {0};
+        int16_t angle_roll {0};
+        int16_t angle_pitch {0};
+        int16_t angle_yaw {0};
+        int16_t mag_x {0};
+        int16_t mag_y {0};
+        int16_t mag_z {0};
+    };
+
+    struct alignas(1) imu_data_t
+    {
+        union
+        {
+            imu_t   imu_data;
+            uint8_t data[YJ901S_DATA_SIZE];
+        };
+    };
+
     struct alignas(1) motor_t
     {
         uint8_t motor_id {0};
@@ -23,40 +48,15 @@ namespace pi
         };
     };
 
-    struct alignas(1) imu_t
-    {
-        int16_t accX {0};
-        int16_t accY {0};
-        int16_t accZ {0};
-        int16_t angVelX {0};
-        int16_t angVelY {0};
-        int16_t angVelZ {0};
-        int16_t angle_roll {0};
-        int16_t angle_pitch {0};
-        int16_t angle_yaw {0};
-        int16_t magX {0};
-        int16_t magY {0};
-        int16_t magZ {0};
-    };
-
-    struct alignas(1) imu_data_t
-    {
-        union
-        {
-            imu_t   imu_data;
-            uint8_t data[YJ901S_DATA_SIZE];
-        };
-    };
-
     struct alignas(1) motor_set_t
     {
-        uint8_t motor_id;
-        uint8_t motor_cmd;
-        int32_t position;
-        int32_t velocity;
-        int32_t torque;
-        float   kp;
-        float   kd;
+        uint8_t motor_id {0};
+        uint8_t motor_cmd {0};
+        int32_t position {0};
+        int32_t velocity {0};
+        int32_t torque {0};
+        float   kp {0};
+        float   kd {0};
     };
 
     struct alignas(1) motor_set_data_t
@@ -83,12 +83,12 @@ namespace pi
 
     struct motor_status_t
     {
-        motor_data_t motor_fb1[14] = {};
-        motor_data_t motor_fb2[14] = {};
+        motor_data_t motor_fb1[14] {};
+        motor_data_t motor_fb2[14] {};
 
-        imu_data_t imu_data = {};
+        imu_data_t imu_data {};
 
-        uint8_t foot_sensor1[3] = {0};
-        uint8_t foot_sensor2[3] = {0};
+        uint8_t foot_sensor1[3] {0};
+        uint8_t foot_sensor2[3] {0};
     };
 } // namespace pi

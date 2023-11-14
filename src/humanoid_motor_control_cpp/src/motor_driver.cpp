@@ -1,6 +1,11 @@
 #include "humanoid_motor_control_cpp/motor_driver.h"
+#include "humanoid_motor_control_cpp/spi_utils.h"
 
-// using namespace std;
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 namespace pi
 {
@@ -8,7 +13,7 @@ namespace pi
     /*
     spi_dev：SPI设备
     */
-    MotorDriver::MotorDriver(const std::string spi_dev) : m_spi_dev(spi_dev)
+    MotorDriver::MotorDriver(const std::string& spi_dev) : m_spi_dev(spi_dev)
     {
         printf("init_class spi_dev: %s\n", spi_dev.c_str());
         printf("motor_type:%u, can1_motor_num:%u, can2_motor_num:%u\n", MOTOR_TYPE, CAN1_NUM, CAN2_NUM);
@@ -17,9 +22,12 @@ namespace pi
         m_spi_tx_motor_num     = 0;
         m_spi_tx_databuffer[0] = 0xA5;
         m_spi_tx_databuffer[1] = 0x5A;
+
         set_robot_param(MOTOR_TYPE, CAN1_NUM, CAN2_NUM, ENABLE_IMU, ENABLE_FOOTSENSOR);
         t1 = std::chrono::high_resolution_clock::now();
+
         usleep(1000);
+
         if (!open_spi())
         {
             printf("open spi fail!!!!!!!!!\n");
@@ -32,129 +40,71 @@ namespace pi
         int8_t switch_can = motor_id & 0xf0;
         int8_t id         = motor_id & 0x0f;
         if (switch_can == 0x10)
-        {
             return all_motor_status.motor_fb1[id - 1].motor;
-        }
         else if (switch_can == 0x20)
-        {
             return all_motor_status.motor_fb2[id - 1].motor;
-        }
         else
-        {
             return *(motor_t*)nullptr;
-        }
     }
 
     imu_t MotorDriver::get_imu_data() { return all_motor_status.imu_data.imu_data; }
 
     uint8_t* MotorDriver::get_footsensor_data(uint8_t switch_can)
     {
-        uint8_t zero_sensor[3] = {0, 0, 0};
+        // uint8_t zero_sensor[3] = {0};
         if (switch_can == FOOTSENSOR1)
-        {
             return all_motor_status.foot_sensor1;
-        }
         else
-        {
             return all_motor_status.foot_sensor2;
-        }
     }
 
     bool MotorDriver::open_spi(void)
     {
-        int ret;
-        //使用SPI接口
-        m_spi_fd = open(m_spi_dev.data(), O_RDWR);
-        if (m_spi_fd < 0)
-        {
-            perror("Error: Cann't open SPI Dev.\n");
-            return false;
-        }
-
         //配置SPI参数
         m_speed         = SPI_SPEED;
         m_delay         = 0;
         m_bits_per_word = 8;
         m_mode          = 0;
 
-        ret = ioctl(m_spi_fd, SPI_IOC_WR_MODE, &m_mode);
-        if (ret == -1)
+        m_spi_fd = spi_open(m_spi_dev, m_speed, m_delay, m_bits_per_word, m_mode);
+
+        if (m_spi_fd < 0)
         {
-            perror("Error: SPI_IOC_WR_MODE fault.\n");
+            perror("Error: Cann't open SPI Dev.\n");
             return false;
         }
 
-        ret = ioctl(m_spi_fd, SPI_IOC_WR_BITS_PER_WORD, &m_bits_per_word);
-        if (ret == -1)
-        {
-            perror("Error: SPI_IOC_WR_BITS fault.\n");
-            return false;
-        }
-
-        ret = ioctl(m_spi_fd, SPI_IOC_WR_MAX_SPEED_HZ, &m_speed);
-        if (ret == -1)
-        {
-            perror("Error: SPI_IOC_WR_MAX_SPEED fault.\n");
-            return false;
-        }
         return true;
     }
 
     void MotorDriver::set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor)
     {
+#ifdef DEBUG
+        printf("spi_dev:%\n", m_spi_dev.c_str());
+        printf("motor_type:%\n", motor_type);
+        printf("can1_motor_num:%\n", can1_motor_num);
+        printf("can2_motor_num:%\n", can2_motor_num);
+        printf("enable_imu:%\n", isenable_imu);
+        printf("footsensor:%\n", isenable_footsensor);
+#endif // DEBUG
+
         m_motor_type          = motor_type;
         m_can1_motor_num      = can1_motor_num;
         m_can2_motor_num      = can2_motor_num;
         m_isenable_imu        = isenable_imu;
         m_isenable_footsensor = isenable_footsensor;
 
-#ifdef DEBUG
-        printf("spi_dev:%\n", m_spi_dev.c_str());
-        printf("motor_type:%u, can1_motor_num:%u, can2_motor_num:%u, enable_imu:%u, footsensor:%u\n",
-               motor_type,
-               can1_motor_num,
-               can2_motor_num,
-               isenable_imu,
-               isenable_footsensor);
-#endif // DEBUG
-
-        int ret;
-
-        //使用SPI1接口
-        m_spi_fd = open(m_spi_dev.c_str(), O_RDWR);
-        if (m_spi_fd < 0)
-        {
-            perror("Error: Cann't open SPI Dev.\n");
-            return;
-        }
-
         //配置SPI参数
         m_speed         = SPI_SPEED;
         m_delay         = 0;
         m_bits_per_word = 8;
         m_mode          = 0;
 
-        ret = ioctl(m_spi_fd, SPI_IOC_WR_MODE, &m_mode);
-        if (ret == -1)
-        {
-            perror("Error: SPI_IOC_WR_MODE fault.\n");
-            m_spi_tx_motor_num = 0;
-            return;
-        }
+        m_spi_fd = spi_open(m_spi_dev, m_speed, m_delay, m_bits_per_word, m_mode);
 
-        ret = ioctl(m_spi_fd, SPI_IOC_WR_BITS_PER_WORD, &m_bits_per_word);
-        if (ret == -1)
+        if (m_spi_fd < 0)
         {
-            perror("Error: SPI_IOC_WR_BITS fault.\n");
-            m_spi_tx_motor_num = 0;
-            return;
-        }
-
-        ret = ioctl(m_spi_fd, SPI_IOC_WR_MAX_SPEED_HZ, &m_speed);
-        if (ret == -1)
-        {
-            perror("Error: SPI_IOC_WR_MAX_SPEED fault.\n");
-            m_spi_tx_motor_num = 0;
+            perror("Error: Cann't open SPI Dev.\n");
             return;
         }
 
@@ -167,27 +117,9 @@ namespace pi
         m_spi_tx_databuffer[7] = m_isenable_footsensor;
         m_spi_tx_databuffer[8] = ENABLE_STOP;
 
-#ifdef TX_DEBUG
-        printf("tx_data: ");
-        for (uint16_t i = 0; i < DATA_PKG_SIZE; i++)
-        {
-            printf("0x%02x,", m_spi_tx_databuffer[i]);
-        }
-        printf("\n");
-#endif //
+        memset(m_spi_rx_databuffer, 0, DATA_PKG_SIZE);
+        int32_t ret = spi_send(m_spi_fd, m_spi_tx_databuffer, m_spi_rx_databuffer, DATA_PKG_SIZE, m_speed, m_delay, m_bits_per_word);
 
-        uint8_t rx_buf[DATA_PKG_SIZE] = {};
-
-        struct spi_ioc_transfer spi = {};
-
-        spi.tx_buf        = (unsigned long)m_spi_tx_databuffer;
-        spi.rx_buf        = (unsigned long)rx_buf;
-        spi.len           = sizeof(m_spi_tx_databuffer);
-        spi.delay_usecs   = m_delay;
-        spi.speed_hz      = m_speed;
-        spi.bits_per_word = m_bits_per_word;
-        // Send wr_addr
-        ret = ioctl(m_spi_fd, SPI_IOC_MESSAGE(1), &spi);
         if (ret < 1)
         {
             perror("Error: SPI_IOC_MESSAGE fault.\n");
@@ -196,24 +128,18 @@ namespace pi
         }
 
 #ifdef DEBUG
+        print_buffer_data("send", spi_tx_databuffer, DATA_PKG_SIZE);
         printf("transmit suc!\n");
-#endif // DEBUG
-#ifdef RX_DEBUG
-        printf("recv data: ");
-        for (uint16_t i = 0; i < DATA_PKG_SIZE; i++)
-        {
-            printf("0x%02x,", rx_buf[i]);
-        }
-        printf("\n");
+        print_buffer_data("recv", m_spi_rx_databuffer, DATA_PKG_SIZE);
 #endif // DEBUG
 
-        parse_datas(rx_buf);
-        close(m_spi_fd);
+        parse_datas(m_spi_rx_databuffer);
+        spi_close(m_spi_fd);
     }
 
     void MotorDriver::motor_set(uint8_t motor_id, int32_t cmd, int32_t posorvolt, int32_t vel, int32_t torque, float kp, float kd)
     {
-        motor_set_data_t motor_state;
+        motor_set_data_t motor_state {};
 
         motor_state.motor.motor_id  = motor_id;
         motor_state.motor.motor_cmd = cmd;
@@ -242,8 +168,6 @@ namespace pi
             clear_tx_buffer();
             return false;
         }
-
-        // printf("pasre_data start!\n");
 
         uint8_t motor_nums = rx_buf[2];
         if (motor_nums != (m_can1_motor_num + m_can2_motor_num))
@@ -285,16 +209,13 @@ namespace pi
 
     void MotorDriver::clear_tx_buffer(void)
     {
-        for (uint16_t i = 0; i < DATA_PKG_SIZE; i++)
-        {
-            m_spi_tx_databuffer[i] = 0x00;
-        }
+        memset(m_spi_tx_databuffer, 0, DATA_PKG_SIZE);
         m_spi_tx_databuffer[0] = 0xA5;
         m_spi_tx_databuffer[1] = 0x5A;
         m_spi_tx_motor_num     = 0;
     }
 
-    bool MotorDriver::spi_send(void)
+    bool MotorDriver::send_spi(void)
     {
         t2                = std::chrono::high_resolution_clock::now();
         uint64_t time_use = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
@@ -328,27 +249,9 @@ namespace pi
         //发送数据
         m_spi_tx_databuffer[2] = m_spi_tx_motor_num | 0x10;
 
-#ifdef TX_DEBUG
-        printf("tx_data: ");
-        for (uint16_t i = 0; i < DATA_PKG_SIZE; i++)
-        {
-            printf("0x%02x,", spi_tx_databuffer[i]);
-        }
-        printf("\n");
-#endif //
+        memset(m_spi_rx_databuffer, 0, DATA_PKG_SIZE);
+        int32_t ret = spi_send(m_spi_fd, m_spi_tx_databuffer, m_spi_rx_databuffer, DATA_PKG_SIZE, m_speed, m_delay, m_bits_per_word);
 
-        uint8_t rx_buf[DATA_PKG_SIZE] = {};
-
-        struct spi_ioc_transfer spi = {};
-
-        spi.tx_buf        = (unsigned long)m_spi_tx_databuffer;
-        spi.rx_buf        = (unsigned long)rx_buf;
-        spi.len           = sizeof(m_spi_tx_databuffer);
-        spi.delay_usecs   = m_delay;
-        spi.speed_hz      = m_speed;
-        spi.bits_per_word = m_bits_per_word;
-        // Send wr_addr
-        int ret = ioctl(m_spi_fd, SPI_IOC_MESSAGE(1), &spi);
         if (ret < 1)
         {
             perror("Error: SPI_IOC_MESSAGE fault.\n");
@@ -356,28 +259,32 @@ namespace pi
         }
 
 #ifdef DEBUG
+        print_buffer_data("send", spi_tx_databuffer, DATA_PKG_SIZE);
         printf("transmit suc!\n");
-#endif // DEBUG
-#ifdef RX_DEBUG
-        printf("recv data: ");
-        for (uint16_t i = 0; i < DATA_PKG_SIZE; i++)
-        {
-            printf("0x%02x,", rx_buf[i]);
-        }
-        printf("\n");
+        print_buffer_data("recv", m_spi_rx_databuffer, DATA_PKG_SIZE);
 #endif // DEBUG
 
         //解析数据
-        if (!parse_datas(rx_buf))
+        if (!parse_datas(m_spi_rx_databuffer))
         {
             m_spi_stop_flag = true;
             clear_tx_buffer();
-            close(m_spi_fd);
+            spi_close(m_spi_fd);
             return false;
         }
         // 关闭spi
-        // close(spi_fd);
+        // spi_close(spi_fd);
         return true;
+    }
+
+    void print_buffer_data(const char* name, uint8_t* data, size_t size)
+    {
+        printf("%s data: ", name);
+        for (uint16_t i = 0; i < size; i++)
+        {
+            printf("0x%02x,", data[i]);
+        }
+        printf("\n");
     }
 
     //位置模式
@@ -435,7 +342,7 @@ namespace pi
         return ERROR_TRANSFER_DATA;
     }
 
-    float MotorDriver::transfer_rec(tranfer_send_type_e type, int32_t data)
+    float MotorDriver::transfer_rec(tranfer_rec_type_e type, int32_t data)
     {
         float res = 0;
         switch (type)
