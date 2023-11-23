@@ -21,14 +21,14 @@ namespace pi
         int16_t mag_z {0};
     };
 
-    struct alignas(1) imu_data_t
-    {
-        union
-        {
-            imu_t   imu_data;
-            uint8_t data[YJ901S_DATA_SIZE];
-        };
-    };
+    // struct alignas(1) imu_data_t
+    // {
+    //     union
+    //     {
+    //         imu_t   imu_data;
+    //         uint8_t data[YJ901S_DATA_SIZE];
+    //     };
+    // };
 
     struct alignas(1) motor_t
     {
@@ -39,14 +39,14 @@ namespace pi
         int32_t torque {0};
     };
 
-    struct alignas(1) motor_data_t
-    {
-        union
-        {
-            motor_t motor;
-            uint8_t data[MOTOR_STATUS_LENGTH];
-        };
-    };
+    // struct alignas(1) motor_data_t
+    // {
+    //     union
+    //     {
+    //         motor_t motor;
+    //         uint8_t data[MOTOR_STATUS_LENGTH];
+    //     };
+    // };
 
     struct alignas(1) motor_set_t
     {
@@ -59,14 +59,14 @@ namespace pi
         float   kd {0};
     };
 
-    struct alignas(1) motor_set_data_t
-    {
-        union
-        {
-            motor_set_t motor;
-            uint8_t     data[MOTOR_SET_LENGTH];
-        };
-    };
+    // struct alignas(1) motor_set_data_t
+    // {
+    //     union
+    //     {
+    //         motor_set_t motor;
+    //         uint8_t     data[MOTOR_SET_LENGTH];
+    //     };
+    // };
 
     enum tranfer_send_type_e
     {
@@ -81,12 +81,18 @@ namespace pi
         POS2RAD,
     };
 
+    enum can_type_e
+    {
+        CAN1 = 0x10,
+        CAN2 = 0x20,
+    };
+
     struct motor_status_t
     {
-        motor_data_t motor_fb1[14] {};
-        motor_data_t motor_fb2[14] {};
+        motor_t motor_fb1[14] {};
+        motor_t motor_fb2[14] {};
 
-        imu_data_t imu_data {};
+        imu_t imu_data {};
 
         uint8_t foot_sensor1[3] {0};
         uint8_t foot_sensor2[3] {0};

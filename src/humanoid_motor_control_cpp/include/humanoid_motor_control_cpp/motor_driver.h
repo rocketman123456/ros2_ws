@@ -46,7 +46,7 @@ namespace pi
         int8_t m_isenable_imu;
         int8_t m_isenable_footsensor;
 
-        motor_status_t all_motor_status;
+        motor_status_t m_all_motor_status;
 
         int32_t  m_spi_fd;
         uint32_t m_speed;

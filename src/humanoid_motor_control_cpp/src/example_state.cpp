@@ -22,6 +22,9 @@ int main()
 
     //创建Liveltbot_Driver对象,传入参数
     Livelybot_Driver my_Driver("/dev/spidev4.1");
+
+    my_Driver.spi_send();
+    delay_ms(2000);
     
     int32_t init_pos[ALL_MOTOR_NUM] = {0};
     while(true)
@@ -29,6 +32,7 @@ int main()
         //判断SPI收发是否已经完成，内部制定两次通讯时间间隔超过1ms才能进行下一次通讯
         if(!my_Driver.spi_send())
         {
+            delay_ms(2000);
             continue;
         }
 

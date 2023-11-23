@@ -40,22 +40,22 @@ namespace pi
         int8_t switch_can = motor_id & 0xf0;
         int8_t id         = motor_id & 0x0f;
         if (switch_can == 0x10)
-            return all_motor_status.motor_fb1[id - 1].motor;
+            return m_all_motor_status.motor_fb1[id - 1].motor;
         else if (switch_can == 0x20)
-            return all_motor_status.motor_fb2[id - 1].motor;
+            return m_all_motor_status.motor_fb2[id - 1].motor;
         else
-            return *(motor_t*)nullptr;
+            return *(motor_t*)nullptr; // may cause bug
     }
 
-    imu_t MotorDriver::get_imu_data() { return all_motor_status.imu_data.imu_data; }
+    imu_t MotorDriver::get_imu_data() { return m_all_motor_status.imu_data.imu_data; }
 
     uint8_t* MotorDriver::get_footsensor_data(uint8_t switch_can)
     {
         // uint8_t zero_sensor[3] = {0};
         if (switch_can == FOOTSENSOR1)
-            return all_motor_status.foot_sensor1;
+            return m_all_motor_status.foot_sensor1;
         else
-            return all_motor_status.foot_sensor2;
+            return m_all_motor_status.foot_sensor2;
     }
 
     bool MotorDriver::open_spi(void)
@@ -128,7 +128,7 @@ namespace pi
         }
 
 #ifdef DEBUG
-        print_buffer_data("send", spi_tx_databuffer, DATA_PKG_SIZE);
+        print_buffer_data("send", m_spi_tx_databuffer, DATA_PKG_SIZE);
         printf("transmit suc!\n");
         print_buffer_data("recv", m_spi_rx_databuffer, DATA_PKG_SIZE);
 #endif // DEBUG
@@ -175,6 +175,7 @@ namespace pi
             clear_tx_buffer();
             return false;
         }
+
         for (uint8_t i = 0; i < motor_nums; i++)
         {
             temp_can = rx_buf[3 + i * MOTOR_STATUS_LENGTH] & 0xf0;
@@ -182,27 +183,30 @@ namespace pi
 
             if (temp_can == 0x10)
             {
-                all_motor_status.motor_fb1[temp_id - 1].motor.motor_id = temp_id;
-                memcpy(&all_motor_status.motor_fb1[temp_id - 1].data[1], &rx_buf[3 + i * MOTOR_STATUS_LENGTH + 1], MOTOR_STATUS_LENGTH - 1);
+                m_all_motor_status.motor_fb1[temp_id - 1].motor.motor_id = temp_id;
+                memcpy(&m_all_motor_status.motor_fb1[temp_id - 1].data[1], &rx_buf[3 + i * MOTOR_STATUS_LENGTH + 1], MOTOR_STATUS_LENGTH - 1);
             }
             else if (temp_can == 0x20)
             {
-                all_motor_status.motor_fb2[temp_id - 1].motor.motor_id = temp_id;
-                memcpy(&all_motor_status.motor_fb2[temp_id - 1].data[1], &rx_buf[3 + i * MOTOR_STATUS_LENGTH + 1], MOTOR_STATUS_LENGTH - 1);
+                m_all_motor_status.motor_fb2[temp_id - 1].motor.motor_id = temp_id;
+                memcpy(&m_all_motor_status.motor_fb2[temp_id - 1].data[1], &rx_buf[3 + i * MOTOR_STATUS_LENGTH + 1], MOTOR_STATUS_LENGTH - 1);
             }
         }
+
         uint16_t imu_index        = 3 + motor_nums * MOTOR_STATUS_LENGTH;
         uint16_t footsensor_index = 3 + motor_nums * MOTOR_STATUS_LENGTH;
+        
         if (m_isenable_imu && rx_buf[imu_index] == 0xAA)
         {
-            memcpy(all_motor_status.imu_data.data, &rx_buf[imu_index + 1], YJ901S_DATA_SIZE);
+            memcpy(m_all_motor_status.imu_data.data, &rx_buf[imu_index + 1], YJ901S_DATA_SIZE);
             footsensor_index = imu_index + YJ901S_DATA_SIZE;
         }
         if (m_isenable_footsensor && rx_buf[footsensor_index] == 0xBB)
         {
-            memcpy(all_motor_status.foot_sensor1, &rx_buf[footsensor_index + 1], 3);
-            memcpy(all_motor_status.foot_sensor2, &rx_buf[footsensor_index + 4], 3);
+            memcpy(m_all_motor_status.foot_sensor1, &rx_buf[footsensor_index + 1], 3);
+            memcpy(m_all_motor_status.foot_sensor2, &rx_buf[footsensor_index + 4], 3);
         }
+
         clear_tx_buffer();
         return true;
     }
@@ -247,8 +251,9 @@ namespace pi
         }
 
         //发送数据
-        m_spi_tx_databuffer[2] = m_spi_tx_motor_num | 0x10;
+        m_spi_tx_databuffer[2] = m_spi_tx_motor_num | 0x20;
 
+        // clear rx buffer
         memset(m_spi_rx_databuffer, 0, DATA_PKG_SIZE);
         int32_t ret = spi_send(m_spi_fd, m_spi_tx_databuffer, m_spi_rx_databuffer, DATA_PKG_SIZE, m_speed, m_delay, m_bits_per_word);
 
@@ -259,7 +264,7 @@ namespace pi
         }
 
 #ifdef DEBUG
-        print_buffer_data("send", spi_tx_databuffer, DATA_PKG_SIZE);
+        print_buffer_data("send", m_spi_tx_databuffer, DATA_PKG_SIZE);
         printf("transmit suc!\n");
         print_buffer_data("recv", m_spi_rx_databuffer, DATA_PKG_SIZE);
 #endif // DEBUG
@@ -268,12 +273,13 @@ namespace pi
         if (!parse_datas(m_spi_rx_databuffer))
         {
             m_spi_stop_flag = true;
-            clear_tx_buffer();
+            //clear_tx_buffer();
             spi_close(m_spi_fd);
             return false;
         }
         // 关闭spi
         // spi_close(spi_fd);
+        //clear_tx_buffer();
         return true;
     }
 
