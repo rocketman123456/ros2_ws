@@ -58,6 +58,8 @@ private:
         m_driver.set_can1_motor_pos(1, result[0]);
         m_driver.set_can1_motor_pos(0, -result[1]);
 
+        m_driver.send_spi();
+
         m_t += 0.01;
     }
 

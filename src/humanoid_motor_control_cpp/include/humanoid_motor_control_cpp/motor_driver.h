@@ -18,6 +18,10 @@ namespace pi
         void initialize();
         void finalize();
 
+        bool open_spi();
+        bool send_spi();
+        void close_spi();
+
         const motor_t& get_motor_state(int8_t motor_id);
         const imu_t&   get_imu_data();
         const uint8_t* get_footsensor_data(uint8_t switch_can);
@@ -38,10 +42,6 @@ namespace pi
         void set_motor_torque(int8_t motor_id, int32_t torque);
 
     private:
-        bool open_spi();
-        bool send_spi();
-        void close_spi();
-
         void set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor);
         void motor_set(uint8_t motor_id, int32_t cmd, int32_t posorvolt, int32_t vel, int32_t torque, float kp, float kd);
         bool parse_datas(uint8_t* rx_buf);
