@@ -11,7 +11,7 @@ namespace pi
     int32_t spi_open(const std::string& spi_dev, uint32_t speed, uint16_t delay, uint8_t bits_per_word, uint8_t mode)
     {
         //使用SPI接口
-        int32_t spi_fd = open(spi_dev.data(), O_RDWR);
+        int32_t spi_fd = open(spi_dev.c_str(), O_RDWR);
         if (spi_fd < 0)
         {
             perror("Error: Cann't open SPI Dev.\n");
@@ -46,7 +46,8 @@ namespace pi
 
     int32_t spi_send(int32_t spi_fd, uint8_t* send, uint8_t* recv, size_t size, uint32_t speed, uint16_t delay, uint8_t bits_per_word)
     {
-        spi_ioc_transfer spi = {};
+        struct spi_ioc_transfer spi {};
+        
         spi.tx_buf           = (unsigned long)send;
         spi.rx_buf           = (unsigned long)recv;
         spi.len              = size;

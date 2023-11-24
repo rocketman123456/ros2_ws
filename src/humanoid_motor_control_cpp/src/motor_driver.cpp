@@ -10,20 +10,18 @@
 namespace pi
 {
     // 构造函数
-    /*
-    spi_dev：SPI设备
-    */
     MotorDriver::MotorDriver(const std::string& spi_dev) : m_spi_dev(spi_dev) {}
 
     void MotorDriver::initialize()
     {
         printf("init_class spi_dev: %s\n", m_spi_dev.c_str());
         printf("motor_type:%u, can1_motor_num:%u, can2_motor_num:%u\n", k_motor_type, k_can1_num, k_can2_num);
+        printf("k_motor_set_len: %d\n", k_motor_set_len);
+        printf("k_motor_status_len: %d\n", k_motor_status_len);
+        printf("k_yj901s_data_len: %d\n", k_yj901s_data_len);
 
         m_spi_stop_flag        = false;
         m_spi_tx_motor_num     = 0;
-        m_spi_tx_databuffer[0] = 0xA5;
-        m_spi_tx_databuffer[1] = 0x5A;
 
         //配置SPI参数
         m_speed         = k_spi_speed;
@@ -135,10 +133,11 @@ namespace pi
         if (!parse_datas(m_spi_rx_databuffer))
         {
             m_spi_stop_flag = true;
-            spi_close(m_spi_fd);
+            clear_tx_buffer();
+            close_spi();
             return false;
         }
-        // spi_close(spi_fd);
+        // close_spi();
         return true;
     }
 
@@ -161,12 +160,12 @@ namespace pi
     void MotorDriver::set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor)
     {
 #ifdef DEBUG
-        printf("spi_dev:%\n", m_spi_dev.c_str());
-        printf("motor_type:%\n", motor_type);
-        printf("can1_motor_num:%\n", can1_motor_num);
-        printf("can2_motor_num:%\n", can2_motor_num);
-        printf("enable_imu:%\n", isenable_imu);
-        printf("footsensor:%\n", isenable_footsensor);
+        printf("spi_dev:%s\n", m_spi_dev.c_str());
+        printf("motor_type:%d\n", motor_type);
+        printf("can1_motor_num:%d\n", can1_motor_num);
+        printf("can2_motor_num:%d\n", can2_motor_num);
+        printf("enable_imu:%d\n", isenable_imu);
+        printf("footsensor:%d\n", isenable_footsensor);
 #endif // DEBUG
 
         m_motor_type        = motor_type;
@@ -184,6 +183,8 @@ namespace pi
         }
 
         //发送数据
+        m_spi_tx_databuffer[0] = 0xA5;
+        m_spi_tx_databuffer[1] = 0x5A;
         m_spi_tx_databuffer[2] = 0x20;
         m_spi_tx_databuffer[3] = m_motor_type;
         m_spi_tx_databuffer[4] = m_can1_motor_num;
