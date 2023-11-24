@@ -1,4 +1,4 @@
-#include "humanoid_motor_control_cpp/ankle_ik.h"
+#include "humanoid_motor_control_cpp/kinematic/ankle_ik.h"
 
 #include <cassert>
 #include <cmath>

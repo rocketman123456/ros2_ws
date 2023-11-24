@@ -1,4 +1,9 @@
-#include "Livelybot_Driver.h"
+#include "rclcpp/rclcpp.hpp"
+
+#include "humanoid_motor_control_cpp/kinematic/ankle_ik.h"
+#include "humanoid_motor_control_cpp/motor_driver.h"
+
+#include <string>
 #include <time.h>
 
 //例子
@@ -12,94 +17,66 @@ void delay_ms(int milliseconds)
 
 #define ALL_MOTOR_NUM (CAN1_NUM + CAN2_NUM)
 
-#define MYTIMES 100000
-int main()
+class HumanoidControl : public rclcpp::Node
 {
-    int32_t          add_pos = 0;
-    imu_space_s      imu_data;
-    motor_fb_space_s motor_state;
-    bool             spi_flag = false;
-
-    //创建Liveltbot_Driver对象,传入参数
-    Livelybot_Driver my_Driver("/dev/spidev4.1");
-
-    int32_t init_pos[ALL_MOTOR_NUM] = {0};
-
-    my_Driver.spi_send();
-
-    for (uint8_t i = 0; i < CAN1_NUM; i++)
+public:
+    // 构造函数,有一个参数为节点名称
+    HumanoidControl(std::string name) : Node(name), m_driver("/dev/spidev4.1")
     {
-        uint8_t temp_id = 0x10 | (i + 1);
-        init_pos[i]     = my_Driver.get_motor_state(temp_id).position;
-        printf("m0x%02x: %d\t", temp_id, init_pos[i]);
-        my_Driver.set_motor_position(temp_id, init_pos[i] + add_pos);
+        RCLCPP_INFO(this->get_logger(), "%s节点已经启动.", name.c_str());
+        // 创建发布者
+        // m_command_publisher = this->create_publisher<std_msgs::msg::String>("command", 10);
+        // 创建定时器，500ms为周期，定时发布
+        m_timer = this->create_wall_timer(std::chrono::milliseconds(2), std::bind(&HumanoidControl::timer_callback, this));
+
+        m_driver.initialize();
     }
 
-    for (uint8_t i = 0; i < CAN2_NUM; i++)
+private:
+    void timer_callback()
     {
-        uint8_t temp_id        = 0x20 | (i + 1);
-        init_pos[i + CAN1_NUM] = my_Driver.get_motor_state(temp_id).position;
-        printf("m0x%02x: %d\t", temp_id, init_pos[i + CAN1_NUM]);
-        my_Driver.set_motor_position(temp_id, init_pos[i + CAN1_NUM] + add_pos);
-    }
-    printf("\n");
+        // 创建消息
+        std::string message = "forward";
+        // 日志打印
+        // RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.c_str());
 
-    delay_ms(2000);
-    spi_flag = my_Driver.spi_send();
+        double d  = 64.3 / 2.0;
+        double L1 = 25.0;
+        double h1 = 112.0;
+        double h2 = 65.0;
 
-    int32_t target_pos = my_Driver.transfer_send(ANG2POS, 10);
+        double tx = 10.0 / 180.0 * M_PI * sin(m_t);
+        double ty = 20.0 / 180.0 * M_PI * sin(m_t);
 
-    for (int times = 0; times < 10; times++)
-    {
+        std::array<double, 2> result = pi::ankle_ik(d, L1, h1, h2, tx, ty);
 
-        while (add_pos < target_pos)
-        {
-            // delay_ms(1);
-            // 设置can1线id为1的电机的位置
-            for (uint8_t i = 0; i < CAN1_NUM; i++)
-            {
-                uint8_t temp_id = 0x10 | (i + 1);
-                printf("motor0x%02x pos:%d\n", temp_id, my_Driver.get_motor_state(temp_id).position);
-                my_Driver.set_motor_position(temp_id, init_pos[i] + add_pos);
-            }
+        RCLCPP_INFO(this->get_logger(), "tx: %lf, ty: %lf, m1: %lf, m2: %lf", tx, ty, result[0], result[1]);
 
-            for (uint8_t i = 0; i < CAN2_NUM; i++)
-            {
-                uint8_t temp_id = 0x20 | (i + 1);
-                printf("motor0x%02x pos:%d\n", temp_id, my_Driver.get_motor_state(temp_id).position);
-                my_Driver.set_motor_position(temp_id, init_pos[i + CAN1_NUM] + add_pos);
-            }
+        result[0] = result[0] / (M_PI * 2.0) * 2000000.0;
+        result[1] = result[1] / (M_PI * 2.0) * 2000000.0;
 
-            //发送指令
-            spi_flag = my_Driver.spi_send();
-            if (spi_flag)
-                add_pos += 5;
-        }
+        m_driver.set_can1_motor_pos(1, result[0]);
+        m_driver.set_can1_motor_pos(0, -result[1]);
 
-        while (add_pos > 0)
-        {
-            // delay_ms(1);
-            // 设置can1线id为1的电机的位置
-            for (uint8_t i = 0; i < CAN1_NUM; i++)
-            {
-                uint8_t temp_id = 0x10 | (i + 1);
-                printf("motor0x%02x pos:%d\n", temp_id, my_Driver.get_motor_state(temp_id).position);
-                my_Driver.set_motor_position(temp_id, init_pos[i] + add_pos);
-            }
-
-            for (uint8_t i = 0; i < CAN2_NUM; i++)
-            {
-                uint8_t temp_id = 0x20 | (i + 1);
-                printf("motor0x%02x pos:%d\n", temp_id, my_Driver.get_motor_state(temp_id).position);
-                my_Driver.set_motor_position(temp_id, init_pos[i + CAN1_NUM] + add_pos);
-            }
-
-            //发送指令
-            spi_flag = my_Driver.spi_send();
-            if (spi_flag)
-                add_pos -= 5;
-        }
+        m_t += 0.01;
     }
 
+private:
+    // 声名定时器指针
+    rclcpp::TimerBase::SharedPtr m_timer;
+
+    pi::MotorDriver m_driver;
+
+    double m_t = 0.0;
+};
+
+int main(int argc, char** argv)
+{
+    rclcpp::init(argc, argv);
+    // 创建对应节点的共享指针对象
+    auto node = std::make_shared<HumanoidControl>("humanoid_control");
+    // 运行节点，并检测退出信号
+    rclcpp::spin(node);
+    rclcpp::shutdown();
     return 0;
 }

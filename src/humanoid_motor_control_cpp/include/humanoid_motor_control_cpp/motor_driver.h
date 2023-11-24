@@ -15,22 +15,33 @@ namespace pi
         MotorDriver(const std::string& spi_dev);
         ~MotorDriver() = default;
 
-        motor_t  get_motor_state(int8_t motor_id);
-        imu_t    get_imu_data();
-        uint8_t* get_footsensor_data(uint8_t switch_can);
+        void initialize();
+        void finalize();
 
-        bool open_spi();
-        bool send_spi();
+        const motor_t& get_motor_state(int8_t motor_id);
+        const imu_t&   get_imu_data();
+        const uint8_t* get_footsensor_data(uint8_t switch_can);
+
+        void set_can1_motor_pos(int8_t motor_id, int32_t position);
+        void set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
+        void set_can1_motor_vel(int8_t motor_id, int32_t velocity);
+        void set_can1_motor_torque(int8_t motor_id, int32_t torque);
+
+        void set_can2_motor_pos(int8_t motor_id, int32_t position);
+        void set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
+        void set_can2_motor_vel(int8_t motor_id, int32_t velocity);
+        void set_can2_motor_torque(int8_t motor_id, int32_t torque);
 
         void set_motor_position(int8_t motor_id, int32_t position);
         void set_motor_position(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
         void set_motor_velocity(int8_t motor_id, int32_t velocity);
         void set_motor_torque(int8_t motor_id, int32_t torque);
 
-        int32_t transfer_send(tranfer_send_type_e type, float data);
-        float   transfer_rec(tranfer_rec_type_e type, int32_t data);
-
     private:
+        bool open_spi();
+        bool send_spi();
+        void close_spi();
+
         void set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor);
         void motor_set(uint8_t motor_id, int32_t cmd, int32_t posorvolt, int32_t vel, int32_t torque, float kp, float kd);
         bool parse_datas(uint8_t* rx_buf);
@@ -43,8 +54,8 @@ namespace pi
         int8_t m_can1_motor_num;
         int8_t m_can2_motor_num;
 
-        int8_t m_isenable_imu;
-        int8_t m_isenable_footsensor;
+        int8_t m_enable_imu;
+        int8_t m_enable_footsensor;
 
         motor_status_t m_all_motor_status;
 
@@ -54,9 +65,9 @@ namespace pi
         uint8_t  m_bits_per_word;
         uint8_t  m_mode;
 
-        uint8_t m_spi_tx_databuffer[DATA_PKG_SIZE] = {0};
-        uint8_t m_spi_rx_databuffer[DATA_PKG_SIZE] = {0};
-        uint8_t m_spi_tx_motor_num                 = 0;
+        uint8_t m_spi_tx_databuffer[k_data_pkg_size] = {0};
+        uint8_t m_spi_rx_databuffer[k_data_pkg_size] = {0};
+        uint8_t m_spi_tx_motor_num                   = 0;
 
         bool m_spi_stop_flag;
 
