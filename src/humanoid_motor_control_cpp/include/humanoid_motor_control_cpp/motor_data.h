@@ -5,6 +5,7 @@
 
 namespace pi
 {
+#pragma pack(1)
     struct alignas(1) imu_t
     {
         int16_t acc_x {0};
@@ -40,6 +41,7 @@ namespace pi
         float   kp {0};
         float   kd {0};
     };
+#pragma pack()
 
     enum tranfer_send_type_e
     {
