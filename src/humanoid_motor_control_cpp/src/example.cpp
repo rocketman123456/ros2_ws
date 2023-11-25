@@ -45,18 +45,24 @@ private:
         double h1 = 112.0;
         double h2 = 65.0;
 
-        double tx = 10.0 / 180.0 * M_PI * sin(m_t);
+        double tx = 10.0 / 180.0 * M_PI * cos(m_t);
         double ty = 20.0 / 180.0 * M_PI * sin(m_t);
+
+        double angle = 5.0 / 180.0 * M_PI * sin(m_t);
 
         std::array<double, 2> result = pi::ankle_ik(d, L1, h1, h2, tx, ty);
 
+        RCLCPP_INFO(this->get_logger(), "angle: %lf", angle);
         RCLCPP_INFO(this->get_logger(), "tx: %lf, ty: %lf, m1: %lf, m2: %lf", tx, ty, result[0], result[1]);
 
+        angle = angle / (M_PI * 2.0) * 2000000.0;
         result[0] = result[0] / (M_PI * 2.0) * 2000000.0;
         result[1] = result[1] / (M_PI * 2.0) * 2000000.0;
 
-        m_driver.set_can1_motor_pos(1, result[0]);
-        m_driver.set_can1_motor_pos(0, -result[1]);
+        m_driver.set_can1_motor_pos(1, -result[0]);
+        m_driver.set_can1_motor_pos(0, result[1]);
+
+        m_driver.set_can1_motor_pos(2, angle);
 
         m_driver.send_spi();
 
