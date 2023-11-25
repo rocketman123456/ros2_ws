@@ -1,0 +1,1 @@
+sudo chown orangepi /dev/spidev4.1

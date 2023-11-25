@@ -40,6 +40,21 @@ private:
         // 日志打印
         // RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.c_str());
 
+        // if (_motor_name == "L_toe" || _motor_name == "R_toe")
+        // {
+        //     // little motor
+        //     (abs(motor_fb_space.position / 2000000.0 * 360.0) > 1000.0 ? motorState->q = motorState->q : motorState->q = motor_fb_space.position / 2000000.0 * 360.0);
+        //     (abs(motor_fb_space.velocity / 2000000.0 * 360.0) > 1000.0 ? motorState->dq = motorState->dq : motorState->dq = motor_fb_space.velocity / 2000000.0 *(2 * PI));
+        //     (abs(motor_fb_space.torque / 100.0) > 10.0 ? motorState->tauEst = motorState->tauEst : motorState->tauEst = motor_fb_space.torque / 100.0);
+        // }
+        // else
+        // {
+        //     // big motor
+        //     (abs(motor_fb_space.position / 100000.0 * 360.0) > 1000.0 ? motorState->q = motorState->q : motorState->q = motor_fb_space.position / 100000.0 * 360.0);
+        //     (abs(motor_fb_space.velocity / 100000.0 * 360.0) > 1000.0 ? motorState->dq = motorState->dq : motorState->dq = motor_fb_space.velocity / 100000.0 * (2 * PI));
+        //     (abs(motor_fb_space.torque / 2000.0) > 10.0 ? motorState->tauEst = motorState->tauEst : motorState->tauEst = motor_fb_space.torque / 2000.0);
+        // }
+
         double d  = 64.3 / 2.0;
         double L1 = 25.0;
         double h1 = 112.0;
@@ -62,7 +77,10 @@ private:
         m_driver.set_can1_motor_pos(1, -result[0]);
         m_driver.set_can1_motor_pos(0, result[1]);
 
-        m_driver.set_can1_motor_pos(2, angle);
+        m_driver.set_can2_motor_pos(1, -result[0]);
+        m_driver.set_can2_motor_pos(0, result[1]);
+
+        //m_driver.set_can1_motor_pos(2, angle);
 
         m_driver.send_spi();
 
