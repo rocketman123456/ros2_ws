@@ -70,17 +70,17 @@ private:
         RCLCPP_INFO(this->get_logger(), "angle: %lf", angle);
         RCLCPP_INFO(this->get_logger(), "tx: %lf, ty: %lf, m1: %lf, m2: %lf", tx, ty, result[0], result[1]);
 
-        angle = angle / (M_PI * 2.0) * 2000000.0;
+        angle     = angle / (M_PI * 2.0) * 100000.0;
         result[0] = result[0] / (M_PI * 2.0) * 2000000.0;
         result[1] = result[1] / (M_PI * 2.0) * 2000000.0;
 
-        m_driver.set_can1_motor_pos(1, -result[0]);
-        m_driver.set_can1_motor_pos(0, result[1]);
+        // m_driver.set_can1_motor_pos(1, -result[0]);
+        // m_driver.set_can1_motor_pos(0, result[1]);
 
-        m_driver.set_can2_motor_pos(1, -result[0]);
-        m_driver.set_can2_motor_pos(0, result[1]);
+        // m_driver.set_can2_motor_pos(1, -result[0]);
+        // m_driver.set_can2_motor_pos(0, result[1]);
 
-        //m_driver.set_can1_motor_pos(2, angle);
+        m_driver.set_can1_motor_pos(2, angle);
 
         m_driver.send_spi();
 
