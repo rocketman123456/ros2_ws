@@ -47,6 +47,8 @@ namespace pi
     {
         CAN1 = 0x10,
         CAN2 = 0x20,
+        CAN3 = 0x30,
+        CAN4 = 0x40,
     };
 
     struct motor_status_t

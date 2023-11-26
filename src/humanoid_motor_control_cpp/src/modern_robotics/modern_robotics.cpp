@@ -7,10 +7,11 @@
  */
 #include <Eigen/Dense>
 #include <cmath>
+#include <math.h>
 #include <numbers>
 #include <vector>
 
-#define M_PI 3.14159265358979323846 /* pi */
+// #define M_PI 3.14159265358979323846 /* pi */
 
 namespace mr
 {

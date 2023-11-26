@@ -22,13 +22,16 @@ namespace pi
         MotorControl()  = default;
         ~MotorControl() = default;
 
-        void initialize(std::shared_ptr<MotorDriver> driver, const motor_init_info_t& info);
+        void initialize(const motor_init_info_t& info);
 
-        void setPositionDeg(double position);
-        void setVelocityDeg(double velocity);
-        void setPositionRad(double position);
-        void setVelocityRad(double velocity);
-        void setTorque(double torque);
+        void setPositionDeg(std::shared_ptr<MotorDriver> driver, double position);
+        void setVelocityDeg(std::shared_ptr<MotorDriver> driver, double velocity);
+        void setPositionRad(std::shared_ptr<MotorDriver> driver, double position);
+        void setVelocityRad(std::shared_ptr<MotorDriver> driver, double velocity);
+        void setTorque(std::shared_ptr<MotorDriver> driver, double torque);
+
+        // get motor data from driver
+        void update(std::shared_ptr<MotorDriver> driver);
 
         double getPositionRad() const;
         double getVelocityRad() const;
@@ -36,9 +39,7 @@ namespace pi
         double getVelocityDeg() const;
         double getTorque() const;
 
-    public:
-        std::shared_ptr<MotorDriver> m_driver;
-
+    private:
         can_type_t m_can           = CAN1;
         uint8_t    m_id            = 0;
         double     m_direction     = 1.0;
@@ -46,5 +47,9 @@ namespace pi
         double     m_pos_scalar    = 0;
         double     m_vel_scalar    = 0;
         double     m_torque_scalar = 0;
+
+        double m_position = 0.0;
+        double m_velocity = 0.0;
+        double m_torque   = 0.0;
     };
 } // namespace pi
