@@ -2,17 +2,18 @@
 
 #include "motor_control/motor_driver.h"
 
+#include <Eigen/Dense>
+#include <math.h>
+#include <vector>
+
 namespace pi
 {
     struct imu_init_info_t
     {
-        can_type_t can           = CAN1;
-        uint8_t    id            = 0;
-        double     direction     = 1.0;
-        double     offset        = 0.0;
-        double     pos_scalar    = 0;
-        double     vel_scalar    = 0;
-        double     torque_scalar = 0;
+        double quat_scalar    = 1.0 / 32768.0;
+        double angle_scalar   = 1.0 / 32768.0 * M_PI;
+        double ang_vel_scalar = 1.0 / 32768.0 * 2000.0 / 180.0 * M_PI;
+        double acc_scalar     = 1.0 / 32768.0 * 16.0 * 9.8;
     }
 
     // single motor control

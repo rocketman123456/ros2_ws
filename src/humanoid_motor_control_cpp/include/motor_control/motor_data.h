@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+
 
 namespace pi
 {
@@ -73,8 +74,7 @@ namespace pi
     constexpr uint32_t k_motor_set_len    = sizeof(motor_set_t);
     constexpr uint32_t k_motor_status_len = sizeof(motor_t);
     constexpr uint32_t k_yj901s_data_len  = sizeof(imu_t);
-
-    constexpr uint32_t k_data_pkg_size = 3 + (k_can1_num + k_can2_num) * k_motor_set_len + k_enable_imu * k_yj901s_data_len + k_enable_foot_sensor * 6;
+    constexpr uint32_t k_data_pkg_size    = 3 + (k_can1_num + k_can2_num) * k_motor_set_len + k_enable_imu * k_yj901s_data_len + k_enable_foot_sensor * 6;
 
     constexpr uint32_t k_foot_sensor_id_1 = 0x01;
     constexpr uint32_t k_foot_sensor_id_2 = 0x02;
