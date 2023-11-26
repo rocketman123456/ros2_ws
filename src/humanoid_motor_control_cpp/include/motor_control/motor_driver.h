@@ -26,15 +26,15 @@ namespace pi
         const imu_t&   get_imu_data() const;
         const uint8_t* get_footsensor_data(uint8_t switch_can) const;
 
-        void set_can1_motor_pos(int8_t motor_id, int32_t position);
-        void set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
-        void set_can1_motor_vel(int8_t motor_id, int32_t velocity);
-        void set_can1_motor_torque(int8_t motor_id, int32_t torque);
+        // void set_can1_motor_pos(int8_t motor_id, int32_t position);
+        // void set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
+        // void set_can1_motor_vel(int8_t motor_id, int32_t velocity);
+        // void set_can1_motor_torque(int8_t motor_id, int32_t torque);
 
-        void set_can2_motor_pos(int8_t motor_id, int32_t position);
-        void set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
-        void set_can2_motor_vel(int8_t motor_id, int32_t velocity);
-        void set_can2_motor_torque(int8_t motor_id, int32_t torque);
+        // void set_can2_motor_pos(int8_t motor_id, int32_t position);
+        // void set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
+        // void set_can2_motor_vel(int8_t motor_id, int32_t velocity);
+        // void set_can2_motor_torque(int8_t motor_id, int32_t torque);
 
         void set_motor_position(int8_t motor_id, int32_t position);
         void set_motor_position(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);

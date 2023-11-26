@@ -1,4 +1,0 @@
-Current Library Version is
-
-	EasyProfile V1-2-9-R1  -  EasyObjectDictionary fix on compatibility with non-32bit-system by  adding three reserved bytes to Ep_Ack and Ep_Request CMD type definitions.
-	

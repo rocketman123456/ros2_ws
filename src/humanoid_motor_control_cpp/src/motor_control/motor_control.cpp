@@ -5,7 +5,7 @@
 
 namespace pi
 {
-    void MotorControl::initialize(const motor_init_info_t& info)
+    MotorControl::MotorControl(const motor_init_info_t& info)
     {
         m_can           = info.can;
         m_id            = info.id;

@@ -19,10 +19,8 @@ namespace pi
     class MotorControl
     {
     public:
-        MotorControl()  = default;
+        MotorControl(const motor_init_info_t& info);
         ~MotorControl() = default;
-
-        void initialize(const motor_init_info_t& info);
 
         void setPositionDeg(std::shared_ptr<MotorDriver> driver, double position);
         void setVelocityDeg(std::shared_ptr<MotorDriver> driver, double velocity);

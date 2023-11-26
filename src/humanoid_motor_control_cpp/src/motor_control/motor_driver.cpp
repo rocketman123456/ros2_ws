@@ -306,53 +306,53 @@ namespace pi
     // ---------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------
 
-    void MotorDriver::set_can1_motor_pos(int8_t motor_id, int32_t position)
-    {
-        uint8_t temp_id = 0x10 | (motor_id + 1);
-        set_motor_position(temp_id, position);
-    }
+    // void MotorDriver::set_can1_motor_pos(int8_t motor_id, int32_t position)
+    // {
+    //     uint8_t temp_id = 0x10 | (motor_id + 1);
+    //     set_motor_position(temp_id, position);
+    // }
 
-    void MotorDriver::set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
-    {
-        uint8_t temp_id = 0x10 | (motor_id + 1);
-        set_motor_position(temp_id, position, velocity, torque, kp, kd);
-    }
+    // void MotorDriver::set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
+    // {
+    //     uint8_t temp_id = 0x10 | (motor_id + 1);
+    //     set_motor_position(temp_id, position, velocity, torque, kp, kd);
+    // }
 
-    void MotorDriver::set_can1_motor_vel(int8_t motor_id, int32_t velocity)
-    {
-        uint8_t temp_id = 0x10 | (motor_id + 1);
-        set_motor_velocity(temp_id, velocity);
-    }
+    // void MotorDriver::set_can1_motor_vel(int8_t motor_id, int32_t velocity)
+    // {
+    //     uint8_t temp_id = 0x10 | (motor_id + 1);
+    //     set_motor_velocity(temp_id, velocity);
+    // }
 
-    void MotorDriver::set_can1_motor_torque(int8_t motor_id, int32_t torque)
-    {
-        uint8_t temp_id = 0x10 | (motor_id + 1);
-        set_motor_torque(temp_id, torque);
-    }
+    // void MotorDriver::set_can1_motor_torque(int8_t motor_id, int32_t torque)
+    // {
+    //     uint8_t temp_id = 0x10 | (motor_id + 1);
+    //     set_motor_torque(temp_id, torque);
+    // }
 
-    void MotorDriver::set_can2_motor_pos(int8_t motor_id, int32_t position)
-    {
-        uint8_t temp_id = 0x20 | (motor_id + 1);
-        set_motor_position(temp_id, position);
-    }
+    // void MotorDriver::set_can2_motor_pos(int8_t motor_id, int32_t position)
+    // {
+    //     uint8_t temp_id = 0x20 | (motor_id + 1);
+    //     set_motor_position(temp_id, position);
+    // }
 
-    void MotorDriver::set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
-    {
-        uint8_t temp_id = 0x20 | (motor_id + 1);
-        set_motor_position(temp_id, position, velocity, torque, kp, kd);
-    }
+    // void MotorDriver::set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
+    // {
+    //     uint8_t temp_id = 0x20 | (motor_id + 1);
+    //     set_motor_position(temp_id, position, velocity, torque, kp, kd);
+    // }
 
-    void MotorDriver::set_can2_motor_vel(int8_t motor_id, int32_t velocity)
-    {
-        uint8_t temp_id = 0x20 | (motor_id + 1);
-        set_motor_velocity(temp_id, velocity);
-    }
+    // void MotorDriver::set_can2_motor_vel(int8_t motor_id, int32_t velocity)
+    // {
+    //     uint8_t temp_id = 0x20 | (motor_id + 1);
+    //     set_motor_velocity(temp_id, velocity);
+    // }
 
-    void MotorDriver::set_can2_motor_torque(int8_t motor_id, int32_t torque)
-    {
-        uint8_t temp_id = 0x20 | (motor_id + 1);
-        set_motor_torque(temp_id, torque);
-    }
+    // void MotorDriver::set_can2_motor_torque(int8_t motor_id, int32_t torque)
+    // {
+    //     uint8_t temp_id = 0x20 | (motor_id + 1);
+    //     set_motor_torque(temp_id, torque);
+    // }
 
     // ---------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------
