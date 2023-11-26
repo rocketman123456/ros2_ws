@@ -26,11 +26,11 @@ add_executable(humanoid_motor_example
   src/example.cpp
   src/spi/spi_driver.cpp
   src/spi/spi_utils.cpp
-  src/kinematic/ankle_ik.cpp
   src/modern_robotics/modern_robotics.cpp
   src/modern_robotics/kinematics.cpp
   src/modern_robotics/dynamics.cpp
   src/motor_control/motor_control.cpp
+  src/humanoid_control/kinematic/ankle_ik.cpp
   src/humanoid_control/arm_control.cpp
   src/humanoid_control/leg_control.cpp
 )
