@@ -16,35 +16,35 @@ namespace pi
         m_torque_scalar = info.torque_scalar;
     }
 
-    void MotorControl::setPositionDeg(std::shared_ptr<MotorDriver> driver, double position)
+    void MotorControl::setPositionDeg(std::shared_ptr<SpiDriver> driver, double position)
     {
         double  result  = position * m_direction * m_pos_scalar * M_PI / 180.0;
         uint8_t temp_id = m_can | (motor_id + 1);
         m_driver->set_motor_position(temp_id, result);
     }
 
-    void MotorControl::setVelocityDeg(std::shared_ptr<MotorDriver> driver, double velocity)
+    void MotorControl::setVelocityDeg(std::shared_ptr<SpiDriver> driver, double velocity)
     {
         double  result  = velocity * m_direction * m_vel_scalar * M_PI / 180.0;
         uint8_t temp_id = m_can | (motor_id + 1);
         m_driver->set_motor_velocity(temp_id, result);
     }
 
-    void MotorControl::setPositionRad(std::shared_ptr<MotorDriver> driver, std::shared_ptr<MotorDriver> driver, double position)
+    void MotorControl::setPositionRad(std::shared_ptr<SpiDriver> driver, std::shared_ptr<SpiDriver> driver, double position)
     {
         double  result  = position * m_direction * m_pos_scalar;
         uint8_t temp_id = m_can | (motor_id + 1);
         m_driver->set_motor_position(temp_id, result);
     }
 
-    void MotorControl::setVelocityRad(std::shared_ptr<MotorDriver> driver, double velocity)
+    void MotorControl::setVelocityRad(std::shared_ptr<SpiDriver> driver, double velocity)
     {
         double  result  = torque * m_direction * m_vel_scalar;
         uint8_t temp_id = m_can | (motor_id + 1);
         m_driver->set_motor_velocity(temp_id, result);
     }
 
-    void MotorControl::setTorque(std::shared_ptr<MotorDriver> driver, double torque)
+    void MotorControl::setTorque(std::shared_ptr<SpiDriver> driver, double torque)
     {
         double  result  = torque * m_direction * m_torque_scalar;
         uint8_t temp_id = m_can | (motor_id + 1);
@@ -55,7 +55,7 @@ namespace pi
     // ------------------------------------------------------------------
     // ------------------------------------------------------------------
 
-    void MotorControl::update(std::shared_ptr<MotorDriver> driver)
+    void MotorControl::update(std::shared_ptr<SpiDriver> driver)
     {
         uint8_t  temp_id = m_can | (motor_id + 1);
         motor_t& state   = driver->get_motor_state(temp_id);

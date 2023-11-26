@@ -8,12 +8,12 @@ namespace pi
 {
 
     // 定义一个简单的类
-    class MotorDriver
+    class SpiDriver
     {
     public:
         // 构造函数
-        MotorDriver(const std::string& spi_dev);
-        ~MotorDriver() = default;
+        SpiDriver(const std::string& spi_dev);
+        ~SpiDriver() = default;
 
         void initialize();
         void finalize();

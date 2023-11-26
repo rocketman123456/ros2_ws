@@ -1,5 +1,5 @@
-#include "motor_control/motor_driver.h"
-#include "motor_control/spi_utils.h"
+#include "spi/spi_driver.h"
+#include "spi/spi_utils.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -10,9 +10,9 @@
 namespace pi
 {
     // 构造函数
-    MotorDriver::MotorDriver(const std::string& spi_dev) : m_spi_dev(spi_dev) {}
+    SpiDriver::SpiDriver(const std::string& spi_dev) : m_spi_dev(spi_dev) {}
 
-    void MotorDriver::initialize()
+    void SpiDriver::initialize()
     {
         printf("init_class spi_dev: %s\n", m_spi_dev.c_str());
         printf("motor_type:%u, can1_motor_num:%u, can2_motor_num:%u\n", k_motor_type, k_can1_num, k_can2_num);
@@ -41,9 +41,9 @@ namespace pi
         }
     }
 
-    void MotorDriver::finalize() { close_spi(); }
+    void SpiDriver::finalize() { close_spi(); }
 
-    const motor_t& MotorDriver::get_motor_state(int8_t motor_id) const
+    const motor_t& SpiDriver::get_motor_state(int8_t motor_id) const
     {
         int8_t switch_can = motor_id & 0xf0;
         int8_t id         = motor_id & 0x0f;
@@ -55,9 +55,9 @@ namespace pi
             return *(motor_t*)nullptr; // may cause bug
     }
 
-    const imu_t& MotorDriver::get_imu_data() const { return m_all_motor_status.imu_data; }
+    const imu_t& SpiDriver::get_imu_data() const { return m_all_motor_status.imu_data; }
 
-    const uint8_t* MotorDriver::get_footsensor_data(uint8_t id) const
+    const uint8_t* SpiDriver::get_footsensor_data(uint8_t id) const
     {
         if (id == k_foot_sensor_id_1)
             return m_all_motor_status.foot_sensor1;
@@ -66,7 +66,7 @@ namespace pi
         return nullptr;
     }
 
-    bool MotorDriver::open_spi(void)
+    bool SpiDriver::open_spi(void)
     {
         m_spi_fd = spi_open(m_spi_dev, m_speed, m_delay, m_bits_per_word, m_mode);
 
@@ -79,7 +79,7 @@ namespace pi
         return true;
     }
 
-    bool MotorDriver::send_spi(void)
+    bool SpiDriver::send_spi(void)
     {
         t2                = std::chrono::high_resolution_clock::now();
         uint64_t time_use = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
@@ -142,13 +142,13 @@ namespace pi
         return true;
     }
 
-    void MotorDriver::close_spi() { spi_close(m_spi_fd); }
+    void SpiDriver::close_spi() { spi_close(m_spi_fd); }
 
     // ---------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------
 
-    void MotorDriver::print_buffer_data(const char* name, uint8_t* data, size_t size)
+    void SpiDriver::print_buffer_data(const char* name, uint8_t* data, size_t size)
     {
         if (m_print_buffer_data)
         {
@@ -161,7 +161,7 @@ namespace pi
         }
     }
 
-    void MotorDriver::set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor)
+    void SpiDriver::set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor)
     {
         if (m_print_debug_info)
         {
@@ -219,7 +219,7 @@ namespace pi
         spi_close(m_spi_fd);
     }
 
-    void MotorDriver::motor_set(uint8_t motor_id, int32_t cmd, int32_t posorvolt, int32_t vel, int32_t torque, float kp, float kd)
+    void SpiDriver::motor_set(uint8_t motor_id, int32_t cmd, int32_t posorvolt, int32_t vel, int32_t torque, float kp, float kd)
     {
         motor_set_t motor_state {};
 
@@ -240,7 +240,7 @@ namespace pi
         m_spi_tx_motor_num++;
     }
 
-    bool MotorDriver::parse_datas(uint8_t* rx_buf)
+    bool SpiDriver::parse_datas(uint8_t* rx_buf)
     {
         uint8_t temp_id  = 0x00;
         uint8_t temp_can = 0x00;
@@ -294,7 +294,7 @@ namespace pi
         return true;
     }
 
-    void MotorDriver::clear_tx_buffer(void)
+    void SpiDriver::clear_tx_buffer(void)
     {
         memset(m_spi_tx_databuffer, 0, k_data_pkg_size);
         m_spi_tx_databuffer[0] = 0xA5;
@@ -306,49 +306,49 @@ namespace pi
     // ---------------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------
 
-    // void MotorDriver::set_can1_motor_pos(int8_t motor_id, int32_t position)
+    // void SpiDriver::set_can1_motor_pos(int8_t motor_id, int32_t position)
     // {
     //     uint8_t temp_id = 0x10 | (motor_id + 1);
     //     set_motor_position(temp_id, position);
     // }
 
-    // void MotorDriver::set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
+    // void SpiDriver::set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
     // {
     //     uint8_t temp_id = 0x10 | (motor_id + 1);
     //     set_motor_position(temp_id, position, velocity, torque, kp, kd);
     // }
 
-    // void MotorDriver::set_can1_motor_vel(int8_t motor_id, int32_t velocity)
+    // void SpiDriver::set_can1_motor_vel(int8_t motor_id, int32_t velocity)
     // {
     //     uint8_t temp_id = 0x10 | (motor_id + 1);
     //     set_motor_velocity(temp_id, velocity);
     // }
 
-    // void MotorDriver::set_can1_motor_torque(int8_t motor_id, int32_t torque)
+    // void SpiDriver::set_can1_motor_torque(int8_t motor_id, int32_t torque)
     // {
     //     uint8_t temp_id = 0x10 | (motor_id + 1);
     //     set_motor_torque(temp_id, torque);
     // }
 
-    // void MotorDriver::set_can2_motor_pos(int8_t motor_id, int32_t position)
+    // void SpiDriver::set_can2_motor_pos(int8_t motor_id, int32_t position)
     // {
     //     uint8_t temp_id = 0x20 | (motor_id + 1);
     //     set_motor_position(temp_id, position);
     // }
 
-    // void MotorDriver::set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
+    // void SpiDriver::set_can2_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
     // {
     //     uint8_t temp_id = 0x20 | (motor_id + 1);
     //     set_motor_position(temp_id, position, velocity, torque, kp, kd);
     // }
 
-    // void MotorDriver::set_can2_motor_vel(int8_t motor_id, int32_t velocity)
+    // void SpiDriver::set_can2_motor_vel(int8_t motor_id, int32_t velocity)
     // {
     //     uint8_t temp_id = 0x20 | (motor_id + 1);
     //     set_motor_velocity(temp_id, velocity);
     // }
 
-    // void MotorDriver::set_can2_motor_torque(int8_t motor_id, int32_t torque)
+    // void SpiDriver::set_can2_motor_torque(int8_t motor_id, int32_t torque)
     // {
     //     uint8_t temp_id = 0x20 | (motor_id + 1);
     //     set_motor_torque(temp_id, torque);
@@ -359,17 +359,17 @@ namespace pi
     // ---------------------------------------------------------------------------------------------------
 
     //位置模式
-    void MotorDriver::set_motor_position(int8_t motor_id, int32_t position) { motor_set(motor_id, 5, position, 0, 0, 0, 0); }
+    void SpiDriver::set_motor_position(int8_t motor_id, int32_t position) { motor_set(motor_id, 5, position, 0, 0, 0, 0); }
 
     //位置PD模式
-    void MotorDriver::set_motor_position(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
+    void SpiDriver::set_motor_position(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd)
     {
         motor_set(motor_id, 7, position, velocity, torque, kp, kd);
     }
 
     //速度模式
-    void MotorDriver::set_motor_velocity(int8_t motor_id, int32_t velocity) { motor_set(motor_id, 6, velocity, 0, 0, 0, 0); }
+    void SpiDriver::set_motor_velocity(int8_t motor_id, int32_t velocity) { motor_set(motor_id, 6, velocity, 0, 0, 0, 0); }
 
     //力矩模式（单边）
-    void MotorDriver::set_motor_torque(int8_t motor_id, int32_t torque) { motor_set(motor_id, 2, torque, 0, 0, 0, 0); }
+    void SpiDriver::set_motor_torque(int8_t motor_id, int32_t torque) { motor_set(motor_id, 2, torque, 0, 0, 0, 0); }
 } // namespace pi

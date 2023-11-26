@@ -1,6 +1,6 @@
 #pragma once
 
-#include "motor_control/motor_driver.h"
+#include "spi/spi_driver.h"
 
 #include <Eigen/Dense>
 #include <math.h>
@@ -24,7 +24,7 @@ namespace pi
         ~ImuState() = default;
 
         // get motor data from driver
-        void update(std::shared_ptr<MotorDriver> driver);
+        void update(std::shared_ptr<SpiDriver> driver);
 
     private:
         can_type_t m_can           = CAN1;

@@ -1,7 +1,7 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "motor_control/kinematic/ankle_ik.h"
-#include "motor_control/motor_driver.h"
+#include "spi/spi_driver.h"
 
 #include <string>
 #include <time.h>
@@ -91,7 +91,7 @@ private:
     // 声名定时器指针
     rclcpp::TimerBase::SharedPtr m_timer;
 
-    pi::MotorDriver m_driver;
+    pi::SpiDriver m_driver;
 
     double m_t = 0.0;
 };

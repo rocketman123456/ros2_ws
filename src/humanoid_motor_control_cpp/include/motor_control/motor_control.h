@@ -1,6 +1,6 @@
 #pragma once
 
-#include "motor_control/motor_driver.h"
+#include "spi/spi_driver.h"
 
 namespace pi
 {
@@ -22,14 +22,14 @@ namespace pi
         MotorControl(const motor_init_info_t& info);
         ~MotorControl() = default;
 
-        void setPositionDeg(std::shared_ptr<MotorDriver> driver, double position);
-        void setVelocityDeg(std::shared_ptr<MotorDriver> driver, double velocity);
-        void setPositionRad(std::shared_ptr<MotorDriver> driver, double position);
-        void setVelocityRad(std::shared_ptr<MotorDriver> driver, double velocity);
-        void setTorque(std::shared_ptr<MotorDriver> driver, double torque);
+        void setPositionDeg(std::shared_ptr<SpiDriver> driver, double position);
+        void setVelocityDeg(std::shared_ptr<SpiDriver> driver, double velocity);
+        void setPositionRad(std::shared_ptr<SpiDriver> driver, double position);
+        void setVelocityRad(std::shared_ptr<SpiDriver> driver, double velocity);
+        void setTorque(std::shared_ptr<SpiDriver> driver, double torque);
 
         // get motor data from driver
-        void update(std::shared_ptr<MotorDriver> driver);
+        void update(std::shared_ptr<SpiDriver> driver);
 
         double getPositionRad() const;
         double getVelocityRad() const;
