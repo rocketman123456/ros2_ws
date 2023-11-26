@@ -1,5 +1,5 @@
 #pragma once
-#include "humanoid_motor_control_cpp/motor_data.h"
+#include "motor_control/motor_data.h"
 
 #include <chrono>
 #include <string>
@@ -22,9 +22,9 @@ namespace pi
         bool send_spi();
         void close_spi();
 
-        const motor_t& get_motor_state(int8_t motor_id);
-        const imu_t&   get_imu_data();
-        const uint8_t* get_footsensor_data(uint8_t switch_can);
+        const motor_t& get_motor_state(int8_t motor_id) const;
+        const imu_t&   get_imu_data() const;
+        const uint8_t* get_footsensor_data(uint8_t switch_can) const;
 
         void set_can1_motor_pos(int8_t motor_id, int32_t position);
         void set_can1_motor_pos(int8_t motor_id, int32_t position, int32_t velocity, int32_t torque, float kp, float kd);
@@ -47,6 +47,9 @@ namespace pi
         bool parse_datas(uint8_t* rx_buf);
         void clear_tx_buffer();
         void print_buffer_data(const char* name, uint8_t* data, size_t size);
+
+        bool m_print_debug_info  = false;
+        bool m_print_buffer_data = false;
 
         std::string m_spi_dev;
 

@@ -1,5 +1,5 @@
-#include "humanoid_motor_control_cpp/motor_driver.h"
-#include "humanoid_motor_control_cpp/spi_utils.h"
+#include "motor_control/motor_driver.h"
+#include "motor_control/spi_utils.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -20,8 +20,8 @@ namespace pi
         printf("k_motor_status_len: %d\n", k_motor_status_len);
         printf("k_yj901s_data_len: %d\n", k_yj901s_data_len);
 
-        m_spi_stop_flag        = false;
-        m_spi_tx_motor_num     = 0;
+        m_spi_stop_flag    = false;
+        m_spi_tx_motor_num = 0;
 
         //配置SPI参数
         m_speed         = k_spi_speed;
@@ -43,7 +43,7 @@ namespace pi
 
     void MotorDriver::finalize() { close_spi(); }
 
-    const motor_t& MotorDriver::get_motor_state(int8_t motor_id)
+    const motor_t& MotorDriver::get_motor_state(int8_t motor_id) const
     {
         int8_t switch_can = motor_id & 0xf0;
         int8_t id         = motor_id & 0x0f;
@@ -55,9 +55,9 @@ namespace pi
             return *(motor_t*)nullptr; // may cause bug
     }
 
-    const imu_t& MotorDriver::get_imu_data() { return m_all_motor_status.imu_data; }
+    const imu_t& MotorDriver::get_imu_data() const { return m_all_motor_status.imu_data; }
 
-    const uint8_t* MotorDriver::get_footsensor_data(uint8_t id)
+    const uint8_t* MotorDriver::get_footsensor_data(uint8_t id) const
     {
         if (id == k_foot_sensor_id_1)
             return m_all_motor_status.foot_sensor1;
@@ -123,11 +123,12 @@ namespace pi
             return false;
         }
 
-#ifdef DEBUG
-        print_buffer_data("send", m_spi_tx_databuffer, k_data_pkg_size);
-        printf("transmit suc!\n");
-        print_buffer_data("recv", m_spi_rx_databuffer, k_data_pkg_size);
-#endif // DEBUG
+        if (m_print_debug_info)
+        {
+            print_buffer_data("send", m_spi_tx_databuffer, k_data_pkg_size);
+            printf("transmit suc!\n");
+            print_buffer_data("recv", m_spi_rx_databuffer, k_data_pkg_size);
+        }
 
         //解析数据
         if (!parse_datas(m_spi_rx_databuffer))
@@ -149,24 +150,28 @@ namespace pi
 
     void MotorDriver::print_buffer_data(const char* name, uint8_t* data, size_t size)
     {
-        printf("%s data: ", name);
-        for (uint16_t i = 0; i < size; i++)
+        if (m_print_buffer_data)
         {
-            printf("0x%02x,", data[i]);
+            printf("%s data: ", name);
+            for (uint16_t i = 0; i < size; i++)
+            {
+                printf("0x%02x,", data[i]);
+            }
+            printf("\n");
         }
-        printf("\n");
     }
 
     void MotorDriver::set_robot_param(int8_t motor_type, int8_t can1_motor_num, int8_t can2_motor_num, uint8_t isenable_imu, uint8_t isenable_footsensor)
     {
-#ifdef DEBUG
-        printf("spi_dev:%s\n", m_spi_dev.c_str());
-        printf("motor_type:%d\n", motor_type);
-        printf("can1_motor_num:%d\n", can1_motor_num);
-        printf("can2_motor_num:%d\n", can2_motor_num);
-        printf("enable_imu:%d\n", isenable_imu);
-        printf("footsensor:%d\n", isenable_footsensor);
-#endif // DEBUG
+        if (m_print_debug_info)
+        {
+            printf("spi_dev:%s\n", m_spi_dev.c_str());
+            printf("motor_type:%d\n", motor_type);
+            printf("can1_motor_num:%d\n", can1_motor_num);
+            printf("can2_motor_num:%d\n", can2_motor_num);
+            printf("enable_imu:%d\n", isenable_imu);
+            printf("footsensor:%d\n", isenable_footsensor);
+        }
 
         m_motor_type        = motor_type;
         m_can1_motor_num    = can1_motor_num;
@@ -203,11 +208,12 @@ namespace pi
             return;
         }
 
-#ifdef DEBUG
-        print_buffer_data("send", m_spi_tx_databuffer, k_data_pkg_size);
-        printf("transmit suc!\n");
-        print_buffer_data("recv", m_spi_rx_databuffer, k_data_pkg_size);
-#endif // DEBUG
+        if (m_print_debug_info)
+        {
+            print_buffer_data("send", m_spi_tx_databuffer, k_data_pkg_size);
+            printf("transmit suc!\n");
+            print_buffer_data("recv", m_spi_rx_databuffer, k_data_pkg_size);
+        }
 
         parse_datas(m_spi_rx_databuffer);
         spi_close(m_spi_fd);

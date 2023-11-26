@@ -1,7 +1,7 @@
 #include "rclcpp/rclcpp.hpp"
 
-#include "humanoid_motor_control_cpp/kinematic/ankle_ik.h"
-#include "humanoid_motor_control_cpp/motor_driver.h"
+#include "motor_control/kinematic/ankle_ik.h"
+#include "motor_control/motor_driver.h"
 
 #include <string>
 #include <time.h>

@@ -6,7 +6,7 @@
 namespace pi
 {
 #pragma pack(1)
-    struct alignas(1) imu_t
+    struct imu_t
     {
         int16_t acc_x {0};
         int16_t acc_y {0};
@@ -22,7 +22,7 @@ namespace pi
         int16_t mag_z {0};
     };
 
-    struct alignas(1) motor_t
+    struct motor_t
     {
         uint8_t motor_id {0};
         int32_t motor_cmd {0};
@@ -31,7 +31,7 @@ namespace pi
         int32_t torque {0};
     };
 
-    struct alignas(1) motor_set_t
+    struct motor_set_t
     {
         uint8_t motor_id {0};
         uint8_t motor_cmd {0};
@@ -43,20 +43,7 @@ namespace pi
     };
 #pragma pack()
 
-    enum tranfer_send_type_e
-    {
-        ANG2POS = 0x20,
-        RAD2POS,
-        TOR2TOR,
-    };
-
-    enum tranfer_rec_type_e
-    {
-        POS2ANG = 0x30,
-        POS2RAD,
-    };
-
-    enum can_type_e
+    enum can_type_t
     {
         CAN1 = 0x10,
         CAN2 = 0x20,

@@ -1,4 +1,4 @@
-#include "humanoid_motor_control_cpp/spi_utils.h"
+#include "motor_control/spi_utils.h"
 
 #include <fcntl.h>
 #include <linux/spi/spidev.h>
