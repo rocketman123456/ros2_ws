@@ -18,23 +18,30 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 include_directories(include)
+include_directories(${Eigen3_INCLUDE_DIRS})
 
 add_executable(humanoid_motor_example
   src/example.cpp
-  src/spi/spi_driver.cpp
   src/spi/spi_utils.cpp
+  src/driver/spi_driver.cpp
+  src/driver/virtual_driver.cpp
   src/modern_robotics/modern_robotics.cpp
   src/modern_robotics/kinematics.cpp
   src/modern_robotics/dynamics.cpp
-  src/motor_control/motor_control.cpp
+  src/low_level_control/motor_control.cpp
+  src/low_level_control/imu_state.cpp
   src/humanoid_control/kinematic/ankle_ik.cpp
   src/humanoid_control/arm_control.cpp
   src/humanoid_control/leg_control.cpp
 )
-ament_target_dependencies(humanoid_motor_example rclcpp Eigen3::Eigen)
+ament_target_dependencies(humanoid_motor_example rclcpp Eigen3)
+
+ament_export_dependencies(eigen3_cmake_module)
+ament_export_dependencies(Eigen3)
 
 install(TARGETS 
   humanoid_motor_example

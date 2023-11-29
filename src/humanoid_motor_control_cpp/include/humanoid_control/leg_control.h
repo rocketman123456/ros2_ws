@@ -1,7 +1,6 @@
 #pragma once
-#include "motor_control/motor_control.h"
-#include "spi/spi_driver.h"
-
+#include "driver/spi_driver.h"
+#include "low_level_control/motor_control.h"
 #include "modern_robotics/modern_robotics.h"
 
 #include <vector>
@@ -28,6 +27,6 @@ namespace pi
 
     public:
         std::shared_ptr<SpiDriver> m_driver;
-        std::vector<MotorControl>    m_motors;
+        std::vector<MotorControl>  m_motors;
     };
 } // namespace pi

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "spi/spi_driver.h"
+#include "driver/spi_driver.h"
+
+#include <memory>
 
 namespace pi
 {
@@ -13,14 +15,16 @@ namespace pi
         double     pos_scalar    = 0;
         double     vel_scalar    = 0;
         double     torque_scalar = 0;
-    }
+    };
 
     // single motor control
     class MotorControl
     {
     public:
-        MotorControl(const motor_init_info_t& info);
+        MotorControl();
         ~MotorControl() = default;
+
+        void initialize(const motor_init_info_t& info);
 
         void setPositionDeg(std::shared_ptr<SpiDriver> driver, double position);
         void setVelocityDeg(std::shared_ptr<SpiDriver> driver, double velocity);

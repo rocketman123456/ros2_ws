@@ -1,10 +1,14 @@
 #include "rclcpp/rclcpp.hpp"
 
-#include "motor_control/kinematic/ankle_ik.h"
-#include "spi/spi_driver.h"
+#include "driver/spi_driver.h"
+#include "humanoid_control/kinematic/ankle_ik.h"
+#include "low_level_control/motor_control.h"
+
+#include <eigen3/Eigen/Dense>
 
 #include <string>
 #include <time.h>
+#include <vector>
 
 //例子
 void delay_ms(int milliseconds)
@@ -30,6 +34,8 @@ public:
         m_timer = this->create_wall_timer(std::chrono::milliseconds(2), std::bind(&HumanoidControl::timer_callback, this));
 
         m_driver.initialize();
+
+        std::vector<pi::motor_init_info_t> create_infos;
     }
 
 private:
@@ -80,7 +86,7 @@ private:
         // m_driver.set_can2_motor_pos(1, -result[0]);
         // m_driver.set_can2_motor_pos(0, result[1]);
 
-        m_driver.set_can1_motor_pos(2, angle);
+        // m_driver.set_can1_motor_pos(2, angle);
 
         m_driver.send_spi();
 
@@ -92,6 +98,8 @@ private:
     rclcpp::TimerBase::SharedPtr m_timer;
 
     pi::SpiDriver m_driver;
+
+    std::vector<pi::MotorControl> m_motors;
 
     double m_t = 0.0;
 };

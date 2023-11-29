@@ -1,4 +1,4 @@
-#include "modern_robotics/dynamcics.h"
+#include "modern_robotics/dynamics.h"
 
 namespace mr
 {

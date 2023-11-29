@@ -5,10 +5,8 @@
  * Adapted from modern_robotics.py provided by modernrobotics.org
  * Provides useful Jacobian and frame representation functions
  */
-#include <Eigen/Dense>
 #include <cmath>
 #include <math.h>
-#include <numbers>
 #include <vector>
 
 // #define M_PI 3.14159265358979323846 /* pi */

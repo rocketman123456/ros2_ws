@@ -1,11 +1,11 @@
-#include "motor_control/motor_control.h"
+#include "low_level_control/motor_control.h"
 
 #include <math.h>
 // #define M_PI 3.14159265358979323846 /* pi */
 
 namespace pi
 {
-    MotorControl::MotorControl(const motor_init_info_t& info)
+    void MotorControl::initialize(const motor_init_info_t& info)
     {
         m_can           = info.can;
         m_id            = info.id;
@@ -19,36 +19,36 @@ namespace pi
     void MotorControl::setPositionDeg(std::shared_ptr<SpiDriver> driver, double position)
     {
         double  result  = position * m_direction * m_pos_scalar * M_PI / 180.0;
-        uint8_t temp_id = m_can | (motor_id + 1);
-        m_driver->set_motor_position(temp_id, result);
+        uint8_t temp_id = m_can | (m_id + 1);
+        driver->set_motor_position(temp_id, result);
     }
 
     void MotorControl::setVelocityDeg(std::shared_ptr<SpiDriver> driver, double velocity)
     {
         double  result  = velocity * m_direction * m_vel_scalar * M_PI / 180.0;
-        uint8_t temp_id = m_can | (motor_id + 1);
-        m_driver->set_motor_velocity(temp_id, result);
+        uint8_t temp_id = m_can | (m_id + 1);
+        driver->set_motor_velocity(temp_id, result);
     }
 
-    void MotorControl::setPositionRad(std::shared_ptr<SpiDriver> driver, std::shared_ptr<SpiDriver> driver, double position)
+    void MotorControl::setPositionRad(std::shared_ptr<SpiDriver> driver, double position)
     {
         double  result  = position * m_direction * m_pos_scalar;
-        uint8_t temp_id = m_can | (motor_id + 1);
-        m_driver->set_motor_position(temp_id, result);
+        uint8_t temp_id = m_can | (m_id + 1);
+        driver->set_motor_position(temp_id, result);
     }
 
     void MotorControl::setVelocityRad(std::shared_ptr<SpiDriver> driver, double velocity)
     {
-        double  result  = torque * m_direction * m_vel_scalar;
-        uint8_t temp_id = m_can | (motor_id + 1);
-        m_driver->set_motor_velocity(temp_id, result);
+        double  result  = velocity * m_direction * m_vel_scalar;
+        uint8_t temp_id = m_can | (m_id + 1);
+        driver->set_motor_velocity(temp_id, result);
     }
 
     void MotorControl::setTorque(std::shared_ptr<SpiDriver> driver, double torque)
     {
         double  result  = torque * m_direction * m_torque_scalar;
-        uint8_t temp_id = m_can | (motor_id + 1);
-        m_driver->set_motor_torque(temp_id, result);
+        uint8_t temp_id = m_can | (m_id + 1);
+        driver->set_motor_torque(temp_id, result);
     }
 
     // ------------------------------------------------------------------
@@ -57,8 +57,8 @@ namespace pi
 
     void MotorControl::update(std::shared_ptr<SpiDriver> driver)
     {
-        uint8_t  temp_id = m_can | (motor_id + 1);
-        motor_t& state   = driver->get_motor_state(temp_id);
+        uint8_t temp_id = m_can | (m_id + 1);
+        auto&   state   = driver->get_motor_state(temp_id);
 
         m_position = state.position * m_direction / m_pos_scalar;
         m_velocity = state.velocity * m_direction / m_vel_scalar;

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "spi/spi_driver.h"
+#include "driver/spi_driver.h"
 
 #include <Eigen/Dense>
 #include <math.h>
+#include <memory>
 #include <vector>
 
 namespace pi
@@ -14,7 +15,7 @@ namespace pi
         double angle_scalar   = 1.0 / 32768.0 * M_PI;
         double ang_vel_scalar = 1.0 / 32768.0 * 2000.0 / 180.0 * M_PI;
         double acc_scalar     = 1.0 / 32768.0 * 16.0 * 9.8;
-    }
+    };
 
     // single motor control
     class ImuState

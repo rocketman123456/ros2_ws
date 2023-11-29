@@ -1,4 +1,4 @@
-#include "motor_control/spi_utils.h"
+#include "spi/spi_utils.h"
 
 #include <fcntl.h>
 #include <linux/spi/spidev.h>
