@@ -21,7 +21,7 @@ namespace pi
     class MotorControl
     {
     public:
-        MotorControl();
+        MotorControl() = default;
         ~MotorControl() = default;
 
         void initialize(const motor_init_info_t& info);

@@ -15,18 +15,26 @@ namespace pi
         LegControl()  = default;
         ~LegControl() = default;
 
-        void initialize(std::shared_ptr<SpiDriver> driver, const std::vector<motor_init_info_t>& infos);
-        void reset();
+        void initialize(const std::vector<motor_init_info_t>& infos);
 
-        void positionControlDeg(const std::vector<double>& angles);
-        void positionControlRad(const std::vector<double>& angles);
-        void torqueControl(const std::vector<double>& torques);
+        void positionControlDeg(std::shared_ptr<SpiDriver> driver, const std::vector<double>& angles);
+        void positionControlRad(std::shared_ptr<SpiDriver> driver, const std::vector<double>& angles);
+        void positionControlWithAnkleIKDeg(std::shared_ptr<SpiDriver> driver, const std::vector<double>& angles);
+        void positionControlWithAnkleIKRad(std::shared_ptr<SpiDriver> driver, const std::vector<double>& angles);
+        void torqueControl(std::shared_ptr<SpiDriver> driver, const std::vector<double>& torques);
 
-        void poistionControl(const Eigen::Matrix4d& target);
-        void forceControl(const Eigen::VectorXd& force);
+        void poistionControl(std::shared_ptr<SpiDriver> driver, const Eigen::Matrix4d& target);
+        void forceControl(std::shared_ptr<SpiDriver> driver, const Eigen::VectorXd& force);
+
+        MotorControl* getMotor(int32_t index);
 
     public:
-        std::shared_ptr<SpiDriver> m_driver;
         std::vector<MotorControl>  m_motors;
+
+        // special parameters for current robot control
+        double d;
+        double L1;
+        double h1;
+        double h2;
     };
 } // namespace pi

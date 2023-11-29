@@ -1,7 +1,9 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "driver/spi_driver.h"
+#include "humanoid_control/arm_control.h"
 #include "humanoid_control/kinematic/ankle_ik.h"
+#include "humanoid_control/leg_control.h"
 #include "low_level_control/motor_control.h"
 
 #include <eigen3/Eigen/Dense>
@@ -97,9 +99,9 @@ private:
     // 声名定时器指针
     rclcpp::TimerBase::SharedPtr m_timer;
 
-    pi::SpiDriver m_driver;
-
-    std::vector<pi::MotorControl> m_motors;
+    pi::SpiDriver  m_driver;
+    pi::LegControl m_leg_left;
+    pi::LegControl m_leg_right;
 
     double m_t = 0.0;
 };
