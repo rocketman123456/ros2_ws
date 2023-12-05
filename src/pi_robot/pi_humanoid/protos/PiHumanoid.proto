@@ -1,0 +1,765 @@
+#VRML_SIM R2023b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the PiHumanoid
+# Extracted from: /home/rocketsky/Program/RobotCode/pi_humanoid/urdf/pi_humanoid.urdf
+
+PROTO PiHumanoid [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "PiHumanoid"  # Is `Robot.name`.
+  field  SFString    controller      "void"        # Is `Robot.controller`.
+  field  MFString    controllerArgs  []            # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""            # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE         # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE          # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE         # Is `Robot.selfCollision`.
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    children [
+      Shape {
+        appearance DEF base_link_material PBRAppearance {
+          roughness 1.000000
+          metalness 0
+        }
+        geometry DEF base_link Mesh {
+          url "meshes/base_link.STL"
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis -1.000000 0.000000 0.000000
+          anchor 0.005000 0.075000 -0.160000
+        }
+        device [
+          RotationalMotor {
+            name "abad-L"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "abad-L_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.005000 0.075000 -0.160000
+          children [
+            Shape {
+              appearance DEF left-hip-abad_material PBRAppearance {
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF left-hip-abad Mesh {
+                url "meshes/left-hip-abad.STL"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 0.000000 1.000000
+                anchor 0.049075 0.000000 -0.002000
+              }
+              device [
+                RotationalMotor {
+                  name "Yaw-L"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "Yaw-L_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.049075 0.000000 -0.002000
+                children [
+                  Shape {
+                    appearance DEF left-hip-yaw_material PBRAppearance {
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF left-hip-yaw Mesh {
+                      url "meshes/left-hip-yaw.STL"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 1.000000 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Pitch-L"
+                        maxTorque 10000
+                      }
+                      PositionSensor {
+                        name "Pitch-L_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      children [
+                        Shape {
+                          appearance DEF left-hip-pitch_material PBRAppearance {
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry DEF left-hip-pitch Mesh {
+                            url "meshes/left-hip-pitch.STL"
+                          }
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            axis 0.000000 -1.000000 0.000000
+                            anchor 0.004099 0.000000 -0.149944
+                          }
+                          device [
+                            RotationalMotor {
+                              name "Knee-L"
+                              maxTorque 10000
+                            }
+                            PositionSensor {
+                              name "Knee-L_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.004099 0.000000 -0.149944
+                            children [
+                              Shape {
+                                appearance DEF left-knee_material PBRAppearance {
+                                  roughness 1.000000
+                                  metalness 0
+                                }
+                                geometry DEF left-knee Mesh {
+                                  url "meshes/left-knee.STL"
+                                }
+                              }
+                              HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis 0.000000 1.000000 0.000000
+                                  anchor 0.000000 0.000000 -0.160000
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "ankle-pitch-l"
+                                    maxTorque 10000
+                                  }
+                                  PositionSensor {
+                                    name "ankle-pitch-l_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000000 0.000000 -0.160000
+                                  children [
+                                    Shape {
+                                      appearance DEF left-ankle-pitch_material PBRAppearance {
+                                        roughness 1.000000
+                                        metalness 0
+                                      }
+                                      geometry DEF left-ankle-pitch Mesh {
+                                        url "meshes/left-ankle-pitch.STL"
+                                      }
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "ankle-abad-l"
+                                          maxTorque 10000
+                                        }
+                                        PositionSensor {
+                                          name "ankle-abad-l_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        children [
+                                          Shape {
+                                            appearance DEF left-ankle-abad_material PBRAppearance {
+                                              roughness 1.000000
+                                              metalness 0
+                                            }
+                                            geometry DEF left-ankle-abad Mesh {
+                                              url "meshes/left-ankle-abad.STL"
+                                            }
+                                          }
+                                        ]
+                                        name "left-ankle-abad"
+                                        boundingObject USE left-ankle-abad
+                                        physics Physics {
+                                          density -1
+                                          mass 0.150000
+                                          centerOfMass [ 0.014347 -0.000000 -0.015896 ]
+                                          inertiaMatrix [
+                                            1.298700e-05 5.925900e-05 7.081200e-05
+                                            1.664700e-10 3.298600e-08 2.217800e-11
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "left-ankle-pitch"
+                                  boundingObject USE left-ankle-pitch
+                                  physics Physics {
+                                    density -1
+                                    mass 0.010000
+                                    centerOfMass [ 0.000000 -0.000001 -0.000000 ]
+                                    inertiaMatrix [
+                                      7.067100e-08 4.663700e-08 5.822200e-08
+                                      -7.399000e-13 5.107900e-12 5.280000e-12
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "left-knee"
+                            boundingObject USE left-knee
+                            physics Physics {
+                              density -1
+                              mass 0.600000
+                              centerOfMass [ 0.004168 0.000000 -0.070033 ]
+                              inertiaMatrix [
+                                5.509100e-05 5.532000e-05 4.392300e-05
+                                3.748700e-13 -1.746000e-07 1.288500e-12
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "left-hip-pitch"
+                      boundingObject USE left-hip-pitch
+                      physics Physics {
+                        density -1
+                        mass 0.200000
+                        centerOfMass [ 0.001754 0.000925 -0.064174 ]
+                        inertiaMatrix [
+                          1.076100e-04 1.134400e-04 6.066500e-06
+                          -4.568600e-10 2.778000e-06 1.671100e-08
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "left-hip-yaw"
+                boundingObject USE left-hip-yaw
+                physics Physics {
+                  density -1
+                  mass 0.640000
+                  centerOfMass [ -0.000510 -0.000000 0.003296 ]
+                  inertiaMatrix [
+                    6.735000e-05 6.798400e-05 6.734300e-05
+                    2.670100e-12 -8.282800e-07 -2.489000e-13
+                  ]
+                }
+              }
+            }
+          ]
+          name "left-hip-abad"
+          boundingObject USE left-hip-abad
+          physics Physics {
+            density -1
+            mass 0.360000
+            centerOfMass [ 0.042966 0.000000 0.057621 ]
+            inertiaMatrix [
+              4.250300e-05 4.604900e-05 3.706700e-05
+              1.769100e-12 -4.009800e-06 8.918800e-12
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis -1.000000 0.000000 0.000000
+          anchor 0.005000 -0.075000 -0.160000
+        }
+        device [
+          RotationalMotor {
+            name "abad-R"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "abad-R_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.005000 -0.075000 -0.160000
+          children [
+            Shape {
+              appearance DEF right-hip-abad_material PBRAppearance {
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF right-hip-abad Mesh {
+                url "meshes/right-hip-abad.STL"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 0.000000 1.000000
+                anchor 0.049075 0.000000 -0.002000
+              }
+              device [
+                RotationalMotor {
+                  name "Yaw-R"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "Yaw-R_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.049075 0.000000 -0.002000
+                children [
+                  Shape {
+                    appearance DEF right-hip-yaw_material PBRAppearance {
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF right-hip-yaw Mesh {
+                      url "meshes/right-hip-yaw.STL"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 -1.000000 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "Pitch-R"
+                        maxTorque 10000
+                      }
+                      PositionSensor {
+                        name "Pitch-R_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      children [
+                        Shape {
+                          appearance DEF right-hip-pitch_material PBRAppearance {
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry DEF right-hip-pitch Mesh {
+                            url "meshes/right-hip-pitch.STL"
+                          }
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            axis 0.000000 1.000000 0.000000
+                            anchor 0.004099 0.000000 -0.149944
+                          }
+                          device [
+                            RotationalMotor {
+                              name "Knee-R"
+                              maxTorque 10000
+                            }
+                            PositionSensor {
+                              name "Knee-R_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.004099 0.000000 -0.149944
+                            children [
+                              Shape {
+                                appearance DEF right-knee_material PBRAppearance {
+                                  roughness 1.000000
+                                  metalness 0
+                                }
+                                geometry DEF right-knee Mesh {
+                                  url "meshes/right-knee.STL"
+                                }
+                              }
+                              HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis 0.000000 -1.000000 0.000000
+                                  anchor 0.000000 0.000000 -0.160000
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "ankle-pitch-r"
+                                    maxTorque 10000
+                                  }
+                                  PositionSensor {
+                                    name "ankle-pitch-r_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000000 0.000000 -0.160000
+                                  children [
+                                    Shape {
+                                      appearance DEF right-ankle-pitch_material PBRAppearance {
+                                        roughness 1.000000
+                                        metalness 0
+                                      }
+                                      geometry DEF right-ankle-pitch Mesh {
+                                        url "meshes/right-ankle-pitch.STL"
+                                      }
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "ankle-abad-r"
+                                          maxTorque 10000
+                                        }
+                                        PositionSensor {
+                                          name "ankle-abad-r_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        children [
+                                          Shape {
+                                            appearance DEF right-ankle-abad_material PBRAppearance {
+                                              roughness 1.000000
+                                              metalness 0
+                                            }
+                                            geometry DEF right-ankle-abad Mesh {
+                                              url "meshes/right-ankle-abad.STL"
+                                            }
+                                          }
+                                        ]
+                                        name "right-ankle-abad"
+                                        boundingObject USE right-ankle-abad
+                                        physics Physics {
+                                          density -1
+                                          mass 0.150000
+                                          centerOfMass [ 0.014347 -0.000000 -0.015896 ]
+                                          inertiaMatrix [
+                                            1.298700e-05 5.925900e-05 7.081200e-05
+                                            1.664700e-10 3.298600e-08 2.216900e-11
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "right-ankle-pitch"
+                                  boundingObject USE right-ankle-pitch
+                                  physics Physics {
+                                    density -1
+                                    mass 0.010000
+                                    centerOfMass [ 0.000000 -0.000001 -0.000000 ]
+                                    inertiaMatrix [
+                                      7.067100e-08 4.663700e-08 5.822200e-08
+                                      -7.399000e-13 5.107900e-12 5.280000e-12
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "right-knee"
+                            boundingObject USE right-knee
+                            physics Physics {
+                              density -1
+                              mass 0.600000
+                              centerOfMass [ 0.004168 0.000000 -0.070033 ]
+                              inertiaMatrix [
+                                1.101800e-04 1.106400e-04 8.784500e-05
+                                -2.911300e-12 -3.492000e-07 3.558500e-12
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "right-hip-pitch"
+                      boundingObject USE right-hip-pitch
+                      physics Physics {
+                        density -1
+                        mass 0.200000
+                        centerOfMass [ 0.001754 -0.000925 -0.064174 ]
+                        inertiaMatrix [
+                          1.076100e-04 1.134400e-04 6.066500e-06
+                          4.568600e-10 2.778000e-06 -1.671100e-08
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "right-hip-yaw"
+                boundingObject USE right-hip-yaw
+                physics Physics {
+                  density -1
+                  mass 0.640000
+                  centerOfMass [ -0.000510 -0.000000 0.003296 ]
+                  inertiaMatrix [
+                    6.735000e-05 6.798400e-05 6.734300e-05
+                    2.670100e-12 -8.282800e-07 -2.489000e-13
+                  ]
+                }
+              }
+            }
+          ]
+          name "right-hip-abad"
+          boundingObject USE right-hip-abad
+          physics Physics {
+            density -1
+            mass 0.360000
+            centerOfMass [ 0.042966 0.000000 0.057621 ]
+            inertiaMatrix [
+              4.250300e-05 4.604900e-05 3.706700e-05
+              1.769100e-12 -4.009800e-06 8.918800e-12
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -1.000000 0.000000
+          anchor 0.034500 0.056500 0.068500
+        }
+        device [
+          RotationalMotor {
+            name "arm-pitch-l"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "arm-pitch-l_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.034500 0.056500 0.068500
+          children [
+            Shape {
+              appearance DEF left-arm-pitch_material PBRAppearance {
+                baseColor 0.898040 0.917650 0.929410
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF left-arm-pitch Mesh {
+                url "meshes/left-arm-pitch.STL"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis -1.000000 0.000000 0.000000
+                anchor 0.020000 0.045000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "arm-abad-l"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "arm-abad-l_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.020000 0.045000 0.000000
+                rotation 1.000000 0.000000 0.000000 0.261799
+                children [
+                  Shape {
+                    appearance DEF left-arm-abad_material PBRAppearance {
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF left-arm-abad Mesh {
+                      url "meshes/left-arm-abad.STL"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 1.000000 0.000000
+                      anchor -0.017620 0.014000 -0.119000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "hand-pitch-l"
+                        maxTorque 10000
+                      }
+                      PositionSensor {
+                        name "hand-pitch-l_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation -0.017620 0.014000 -0.119000
+                      children [
+                        Shape {
+                          appearance DEF left-hand-pitch_material PBRAppearance {
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry DEF left-hand-pitch Mesh {
+                            url "meshes/left-hand-pitch.STL"
+                          }
+                        }
+                      ]
+                      name "left-hand-pitch"
+                      boundingObject USE left-hand-pitch
+                      physics Physics {
+                        density -1
+                        mass 0.045000
+                        centerOfMass [ 0.000000 -0.005837 -0.040292 ]
+                        inertiaMatrix [
+                          8.453900e-06 8.485200e-06 1.822900e-06
+                          6.367900e-14 1.840900e-13 -8.685700e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "left-arm-abad"
+                boundingObject USE left-arm-abad
+                physics Physics {
+                  density -1
+                  mass 0.260000
+                  centerOfMass [ -0.015214 -0.005857 -0.096745 ]
+                  inertiaMatrix [
+                    2.511600e-05 2.690100e-05 1.939500e-05
+                    -1.538700e-12 -1.544600e-06 7.728900e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "left-arm-pitch"
+          boundingObject USE left-arm-pitch
+          physics Physics {
+            density -1
+            mass 0.215000
+            centerOfMass [ -0.001423 0.040089 0.000000 ]
+            inertiaMatrix [
+              8.100700e-05 5.399400e-05 8.517100e-05
+              5.034200e-06 3.393400e-21 -7.726100e-21
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 1.000000 0.000000
+          anchor 0.034500 -0.056500 0.068500
+        }
+        device [
+          RotationalMotor {
+            name "arm-pitch-r"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "arm-pitch-r_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.034500 -0.056500 0.068500
+          children [
+            Shape {
+              appearance DEF right-arm-pitch_material PBRAppearance {
+                baseColor 0.898040 0.917650 0.929410
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF right-arm-pitch Mesh {
+                url "meshes/right-arm-pitch.STL"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis -1.000000 0.000000 0.000000
+                anchor 0.020000 -0.045000 0.000000
+              }
+              device [
+                RotationalMotor {
+                  name "arm-abad-r"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "arm-abad-r_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.020000 -0.045000 0.000000
+                rotation -1.000000 0.000000 0.000000 0.261799
+                children [
+                  Shape {
+                    appearance DEF right-arm-abad_material PBRAppearance {
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF right-arm-abad Mesh {
+                      url "meshes/right-arm-abad.STL"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 -1.000000 0.000000
+                      anchor -0.017620 -0.014000 -0.119000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "hand-pitch-r"
+                        maxTorque 10000
+                      }
+                      PositionSensor {
+                        name "hand-pitch-r_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation -0.017620 -0.014000 -0.119000
+                      children [
+                        Shape {
+                          appearance DEF right-hand-pitch_material PBRAppearance {
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry DEF right-hand-pitch Mesh {
+                            url "meshes/right-hand-pitch.STL"
+                          }
+                        }
+                      ]
+                      name "right-hand-pitch"
+                      boundingObject USE right-hand-pitch
+                      physics Physics {
+                        density -1
+                        mass 0.045000
+                        centerOfMass [ -0.000000 0.005837 -0.040292 ]
+                        inertiaMatrix [
+                          8.453900e-06 8.485200e-06 1.822900e-06
+                          6.367900e-14 -1.840900e-13 8.685700e-07
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "right-arm-abad"
+                boundingObject USE right-arm-abad
+                physics Physics {
+                  density -1
+                  mass 0.260000
+                  centerOfMass [ -0.015214 0.005857 -0.096745 ]
+                  inertiaMatrix [
+                    2.511600e-05 2.690100e-05 1.939500e-05
+                    -1.533900e-12 -1.544600e-06 -7.728900e-07
+                  ]
+                }
+              }
+            }
+          ]
+          name "right-arm-pitch"
+          boundingObject USE right-arm-pitch
+          physics Physics {
+            density -1
+            mass 0.215000
+            centerOfMass [ -0.001423 -0.040089 0.000000 ]
+            inertiaMatrix [
+              8.100700e-05 5.399400e-05 8.517100e-05
+              -5.034200e-06 -2.837000e-23 -1.015900e-20
+            ]
+          }
+        }
+      }
+    ]
+    name IS name
+    boundingObject USE base_link
+    physics Physics {
+      density -1
+      mass 1.900000
+      centerOfMass [ 0.024119 0.000000 -0.029915 ]
+      inertiaMatrix [
+        1.725100e-03 1.336700e-03 8.494700e-04
+        8.317300e-20 -1.278700e-04 -3.924700e-19
+      ]
+    }
+  }
+}

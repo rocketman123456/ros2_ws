@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="pi_humanoid">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.024119 5.9203E-17 -0.029915"
+        rpy="0 0 0" />
+      <mass
+        value="1.9" />
+      <inertia
+        ixx="0.0017251"
+        ixy="8.3173E-20"
+        ixz="-0.00012787"
+        iyy="0.0013367"
+        iyz="-3.9247E-19"
+        izz="0.00084947" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="left-hip-abad">
+    <inertial>
+      <origin
+        xyz="0.042966 4.4121E-09 0.057621"
+        rpy="0 0 0" />
+      <mass
+        value="0.36" />
+      <inertia
+        ixx="4.2503E-05"
+        ixy="1.7691E-12"
+        ixz="-4.0098E-06"
+        iyy="4.6049E-05"
+        iyz="8.9188E-12"
+        izz="3.7067E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hip-abad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hip-abad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip-abad-L"
+    type="continuous">
+    <origin
+      xyz="0.005 0.075 -0.16"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left-hip-abad" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <link
+    name="left-hip-yaw">
+    <inertial>
+      <origin
+        xyz="-0.00050968 -8.907E-10 0.003296"
+        rpy="0 0 0" />
+      <mass
+        value="0.64" />
+      <inertia
+        ixx="6.735E-05"
+        ixy="2.6701E-12"
+        ixz="-8.2828E-07"
+        iyy="6.7984E-05"
+        iyz="-2.489E-13"
+        izz="6.7343E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hip-yaw.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hip-yaw.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip-yaw-L"
+    type="continuous">
+    <origin
+      xyz="0.0490750000000004 0 -0.00199999999999959"
+      rpy="0 0 0" />
+    <parent
+      link="left-hip-abad" />
+    <child
+      link="left-hip-yaw" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="left-hip-pitch">
+    <inertial>
+      <origin
+        xyz="0.0017544 0.0009253 -0.064174"
+        rpy="0 0 0" />
+      <mass
+        value="0.2" />
+      <inertia
+        ixx="0.00010761"
+        ixy="-4.5686E-10"
+        ixz="2.778E-06"
+        iyy="0.00011344"
+        iyz="1.6711E-08"
+        izz="6.0665E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hip-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hip-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip-pitch-L"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="left-hip-yaw" />
+    <child
+      link="left-hip-pitch" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="left-knee">
+    <inertial>
+      <origin
+        xyz="0.0041681 9.142E-11 -0.070033"
+        rpy="0 0 0" />
+      <mass
+        value="0.6" />
+      <inertia
+        ixx="5.5091E-05"
+        ixy="3.7487E-13"
+        ixz="-1.746E-07"
+        iyy="5.532E-05"
+        iyz="1.2885E-12"
+        izz="4.3923E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-knee.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-knee.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee-L"
+    type="continuous">
+    <origin
+      xyz="0.00409924966102423 0 -0.149943976712026"
+      rpy="0 0 0" />
+    <parent
+      link="left-hip-pitch" />
+    <child
+      link="left-knee" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="left-ankle-pitch">
+    <inertial>
+      <origin
+        xyz="7.0382E-08 -6.5111E-07 -6.3092E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.01" />
+      <inertia
+        ixx="7.0671E-08"
+        ixy="-7.399E-13"
+        ixz="5.1079E-12"
+        iyy="4.6637E-08"
+        iyz="5.28E-12"
+        izz="5.8222E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-ankle-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-ankle-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle-pitch-L"
+    type="continuous">
+    <origin
+      xyz="0 0 -0.16"
+      rpy="0 0 0" />
+    <parent
+      link="left-knee" />
+    <child
+      link="left-ankle-pitch" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="left-ankle-abad">
+    <inertial>
+      <origin
+        xyz="0.014347 -3.0623E-08 -0.015896"
+        rpy="0 0 0" />
+      <mass
+        value="0.15" />
+      <inertia
+        ixx="1.2987E-05"
+        ixy="1.6647E-10"
+        ixz="3.2986E-08"
+        iyy="5.9259E-05"
+        iyz="2.2178E-11"
+        izz="7.0812E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-ankle-abad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-ankle-abad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle-abad-L"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="left-ankle-pitch" />
+    <child
+      link="left-ankle-abad" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="right-hip-abad">
+    <inertial>
+      <origin
+        xyz="0.042966 4.4121E-09 0.057621"
+        rpy="0 0 0" />
+      <mass
+        value="0.36" />
+      <inertia
+        ixx="4.2503E-05"
+        ixy="1.7691E-12"
+        ixz="-4.0098E-06"
+        iyy="4.6049E-05"
+        iyz="8.9188E-12"
+        izz="3.7067E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hip-abad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hip-abad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip-abad-R"
+    type="continuous">
+    <origin
+      xyz="0.005 -0.075 -0.16"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right-hip-abad" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <link
+    name="right-hip-yaw">
+    <inertial>
+      <origin
+        xyz="-0.00050968 -8.907E-10 0.003296"
+        rpy="0 0 0" />
+      <mass
+        value="0.64" />
+      <inertia
+        ixx="6.735E-05"
+        ixy="2.6701E-12"
+        ixz="-8.2828E-07"
+        iyy="6.7984E-05"
+        iyz="-2.489E-13"
+        izz="6.7343E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hip-yaw.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hip-yaw.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip-yaw-R"
+    type="continuous">
+    <origin
+      xyz="0.0490750000000004 0 -0.00199999999999956"
+      rpy="0 0 0" />
+    <parent
+      link="right-hip-abad" />
+    <child
+      link="right-hip-yaw" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="right-hip-pitch">
+    <inertial>
+      <origin
+        xyz="0.0017544 -0.0009253 -0.064174"
+        rpy="0 0 0" />
+      <mass
+        value="0.2" />
+      <inertia
+        ixx="0.00010761"
+        ixy="4.5686E-10"
+        ixz="2.778E-06"
+        iyy="0.00011344"
+        iyz="-1.6711E-08"
+        izz="6.0665E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hip-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hip-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hip-pitch-R"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right-hip-yaw" />
+    <child
+      link="right-hip-pitch" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="right-knee">
+    <inertial>
+      <origin
+        xyz="0.0041681 8.093E-10 -0.070033"
+        rpy="0 0 0" />
+      <mass
+        value="0.6" />
+      <inertia
+        ixx="0.00011018"
+        ixy="-2.9113E-12"
+        ixz="-3.492E-07"
+        iyy="0.00011064"
+        iyz="3.5585E-12"
+        izz="8.7845E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-knee.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-knee.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee-R"
+    type="continuous">
+    <origin
+      xyz="0.00409924966102423 0 -0.149943976712027"
+      rpy="0 0 0" />
+    <parent
+      link="right-hip-pitch" />
+    <child
+      link="right-knee" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="right-ankle-pitch">
+    <inertial>
+      <origin
+        xyz="7.0382E-08 -6.5111E-07 -6.3092E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.01" />
+      <inertia
+        ixx="7.0671E-08"
+        ixy="-7.399E-13"
+        ixz="5.1079E-12"
+        iyy="4.6637E-08"
+        iyz="5.28E-12"
+        izz="5.8222E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-ankle-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-ankle-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle-pitch-R"
+    type="continuous">
+    <origin
+      xyz="0 0 -0.16"
+      rpy="0 0 0" />
+    <parent
+      link="right-knee" />
+    <child
+      link="right-ankle-pitch" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="right-ankle-abad">
+    <inertial>
+      <origin
+        xyz="0.014347 -3.061E-08 -0.015896"
+        rpy="0 0 0" />
+      <mass
+        value="0.15" />
+      <inertia
+        ixx="1.2987E-05"
+        ixy="1.6647E-10"
+        ixz="3.2986E-08"
+        iyy="5.9259E-05"
+        iyz="2.2169E-11"
+        izz="7.0812E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-ankle-abad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-ankle-abad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ankle-abad-R"
+    type="continuous">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="right-ankle-pitch" />
+    <child
+      link="right-ankle-abad" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+  <link
+    name="left-arm-pitch">
+    <inertial>
+      <origin
+        xyz="-0.0014226 0.040089 1.3878E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.215" />
+      <inertia
+        ixx="8.1007E-05"
+        ixy="5.0342E-06"
+        ixz="3.3934E-21"
+        iyy="5.3994E-05"
+        iyz="-7.7261E-21"
+        izz="8.5171E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-arm-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-arm-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="arm-pitch-L"
+    type="continuous">
+    <origin
+      xyz="0.0345000000000002 0.0565000000000006 0.0685000000000001"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left-arm-pitch" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="left-arm-abad">
+    <inertial>
+      <origin
+        xyz="-0.015214 -0.0058568 -0.096745"
+        rpy="0 0 0" />
+      <mass
+        value="0.26" />
+      <inertia
+        ixx="2.5116E-05"
+        ixy="-1.5387E-12"
+        ixz="-1.5446E-06"
+        iyy="2.6901E-05"
+        iyz="7.7289E-07"
+        izz="1.9395E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-arm-abad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-arm-abad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="arm-abad-L"
+    type="continuous">
+    <origin
+      xyz="0.02 0.045 0"
+      rpy="0.261799387799143 0 0" />
+    <parent
+      link="left-arm-pitch" />
+    <child
+      link="left-arm-abad" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <link
+    name="left-hand-pitch">
+    <inertial>
+      <origin
+        xyz="4.2327E-10 -0.0058372 -0.040292"
+        rpy="0 0 0" />
+      <mass
+        value="0.045" />
+      <inertia
+        ixx="8.4539E-06"
+        ixy="6.3679E-14"
+        ixz="1.8409E-13"
+        iyy="8.4852E-06"
+        iyz="-8.6857E-07"
+        izz="1.8229E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hand-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/left-hand-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="elbow-pitch-L"
+    type="continuous">
+    <origin
+      xyz="-0.0176200000000001 0.014 -0.119"
+      rpy="0 0 0" />
+    <parent
+      link="left-arm-abad" />
+    <child
+      link="left-hand-pitch" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="right-arm-pitch">
+    <inertial>
+      <origin
+        xyz="-0.0014226 -0.040089 0"
+        rpy="0 0 0" />
+      <mass
+        value="0.215" />
+      <inertia
+        ixx="8.1007E-05"
+        ixy="-5.0342E-06"
+        ixz="-2.837E-23"
+        iyy="5.3994E-05"
+        iyz="-1.0159E-20"
+        izz="8.5171E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-arm-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-arm-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="arm-pitch-R"
+    type="continuous">
+    <origin
+      xyz="0.034499999999999 -0.0565 0.0684999999999999"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right-arm-pitch" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="right-arm-abad">
+    <inertial>
+      <origin
+        xyz="-0.015214 0.0058568 -0.096745"
+        rpy="0 0 0" />
+      <mass
+        value="0.26" />
+      <inertia
+        ixx="2.5116E-05"
+        ixy="-1.5339E-12"
+        ixz="-1.5446E-06"
+        iyy="2.6901E-05"
+        iyz="-7.7289E-07"
+        izz="1.9395E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-arm-abad.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-arm-abad.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="arm-abad-R"
+    type="continuous">
+    <origin
+      xyz="0.02 -0.045 0"
+      rpy="-0.261799387799143 0 0" />
+    <parent
+      link="right-arm-pitch" />
+    <child
+      link="right-arm-abad" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <link
+    name="right-hand-pitch">
+    <inertial>
+      <origin
+        xyz="-4.2327E-10 0.0058372 -0.040292"
+        rpy="0 0 0" />
+      <mass
+        value="0.045" />
+      <inertia
+        ixx="8.4539E-06"
+        ixy="6.3679E-14"
+        ixz="-1.8409E-13"
+        iyy="8.4852E-06"
+        iyz="8.6857E-07"
+        izz="1.8229E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hand-pitch.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://pi_humanoid/meshes/right-hand-pitch.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="elbow-pitch-R"
+    type="continuous">
+    <origin
+      xyz="-0.0176199999999996 -0.0139999999999997 -0.119"
+      rpy="0 0 0" />
+    <parent
+      link="right-arm-abad" />
+    <child
+      link="right-hand-pitch" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+</robot>

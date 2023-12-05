@@ -1,0 +1,116 @@
+<mujoco model="PAI-urdf">
+  <compiler angle="radian" meshdir="../meshes/" />
+  <statistic meansize="0.0926387" extent="0.651875" center="0.0422475 1.96626e-06 -0.0564558" />
+  <asset>
+    <mesh name="base_link" file="base_link.STL" />
+    <mesh name="L_hip" file="L_hip.STL" />
+    <mesh name="L_hip2" file="L_hip2.STL" />
+    <mesh name="L_thigh" file="L_thigh.STL" />
+    <mesh name="L_calf" file="L_calf.STL" />
+    <mesh name="L_toe" file="L_toe.STL" />
+    <mesh name="R_hip" file="R_hip.STL" />
+    <mesh name="R_hip2" file="R_hip2.STL" />
+    <mesh name="R_thigh" file="R_thigh.STL" />
+    <mesh name="R_calf" file="R_calf.STL" />
+    <mesh name="R_toe" file="R_toe.STL" />
+    <texture name="grid" type="2d" builtin="checker" rgb1=".1 .2 .3"
+      rgb2=".2 .3 .4" width="300" height="300" />
+    <material name="grid" texture="grid" texrepeat="8 8" reflectance=".1" />
+  </asset>
+  <worldbody>
+    <light name="top" pos="0 0 10" castshadow="false" />
+    <geom size="10 10 .01" type="plane" material="grid" />
+    <body name="base" pos="0.0 0. 0.58">
+      <freejoint/> 
+      <inertial pos="0.069429 0 0.093307" quat="1 0 0 0" mass="1.5" diaginertia="0.0028787 0.0047606 0.0043029" />
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+        mesh="base_link" />
+      <!-- <geom type="mesh" rgba="1 1 1 1" mesh="base_link" /> -->
+      <body name="L_hip" pos="0 0.075 0">
+        <inertial pos="0.041409 0 0.055119" quat="0.678339 0.199641 0.199641 0.678339" mass="0.35"
+          diaginertia="3.8839e-05 3.72416e-05 3.58764e-05" />
+        <joint name="L_hip_joint" pos="0 0 0" axis="-1 0 0" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+          mesh="L_hip" />
+        <geom type="mesh" rgba="1 1 1 1" mesh="L_hip" />
+        <body name="L_hip2" pos="0.049 0 -0.0005">
+          <inertial pos="-0.00049584 0 0.0032955" quat="0.644715 0.290417 0.290417 0.644715"
+            mass="0.65" diaginertia="6.8581e-05 6.84798e-05 6.71912e-05" />
+          <joint name="L_hip2_joint" pos="0 0 0" axis="0 0 1" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+            mesh="L_hip2" />
+          <geom type="mesh" rgba="1 1 1 1" mesh="L_hip2" />
+          <body name="L_thigh">
+            <inertial pos="0 0 -0.05727" quat="0.707107 0 0 0.707107" mass="0.2"
+              diaginertia="0.00012926 0.00012318 6.3186e-06" />
+            <joint name="L_thigh_joint" pos="0 0 0" axis="0 1 0" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+              mesh="L_thigh" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="L_thigh" />
+            <body name="L_calf" pos="0 0 -0.15">
+              <inertial pos="-0.0045962 0.012568 -0.063722"
+                quat="0.714469 -0.00072224 -0.00163154 0.699665" mass="0.36"
+                diaginertia="0.000122532 0.00011945 2.00347e-05" />
+              <joint name="L_calf_joint" pos="0 0 0" axis="0 1 0" />
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+                mesh="L_calf" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="L_calf" />
+              <body name="L_toe" pos="0 0 -0.16">
+                <inertial pos="0.010818 -1.9984e-08 -0.014672"
+                  quat="0.489092 0.510675 0.510675 0.489092" mass="0.09"
+                  diaginertia="2.7107e-05 2.69872e-05 2.7148e-06" />
+                <joint name="L_toe_joint" pos="0 0 0" axis="0 1 0" />
+                <geom type="mesh" contype="11" conaffinity="0" group="1" density="0" rgba="1 1 1 1" 
+                   mesh="L_toe" />
+                <geom type="mesh" rgba="1 1 1 1" mesh="L_toe" />
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="R_hip" pos="0 -0.075 0">
+        <inertial pos="0.041409 0 0.055119" quat="0.678339 0.199641 0.199641 0.678339" mass="0.35"
+          diaginertia="3.8839e-05 3.72416e-05 3.58764e-05" />
+        <joint name="R_hip_joint" pos="0 0 0" axis="-1 0 0" />
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+          mesh="R_hip" />
+        <geom type="mesh" rgba="1 1 1 1" mesh="R_hip" />
+        <body name="R_hip2" pos="0.049 0 -0.0005">
+          <inertial pos="-0.00049584 0 0.0032955" quat="0.644715 0.290417 0.290417 0.644715"
+            mass="0.65" diaginertia="6.8581e-05 6.84798e-05 6.71912e-05" />
+          <joint name="R_hip2_joint" pos="0 0 0" axis="0 0 1" />
+          <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+            mesh="R_hip2" />
+          <geom type="mesh" rgba="1 1 1 1" mesh="R_hip2" />
+          <body name="R_thigh">
+            <inertial pos="0 0 -0.05727" quat="0.707107 0 0 0.707107" mass="0.2"
+              diaginertia="0.00012926 0.00012318 6.3186e-06" />
+            <joint name="R_thigh_joint" pos="0 0 0" axis="0 -1 0" />
+            <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+              mesh="R_thigh" />
+            <geom type="mesh" rgba="1 1 1 1" mesh="R_thigh" />
+            <body name="R_calf" pos="0 0 -0.15">
+              <inertial pos="-0.0045962 -0.012568 -0.063722"
+                quat="0.699665 -0.00163154 -0.00072224 0.714469" mass="0.36"
+                diaginertia="0.000122532 0.00011945 2.00347e-05" />
+              <joint name="R_calf_joint" pos="0 0 0" axis="0 -1 0" />
+              <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+                mesh="R_calf" />
+              <geom type="mesh" rgba="1 1 1 1" mesh="R_calf" />
+              <body name="R_toe" pos="0 0 -0.16">
+                <inertial pos="0.010818 -1.9984e-08 -0.014672"
+                  quat="0.489092 0.510675 0.510675 0.489092" mass="0.09"
+                  diaginertia="2.7107e-05 2.69872e-05 2.7148e-06" />
+                <joint name="R_toe_joint" pos="0 0 0" axis="0 -1 0" />
+                <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1"
+                  mesh="R_toe" />
+                <geom type="mesh" rgba="1 1 1 1" mesh="R_toe" />
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+  </worldbody>
+</mujoco>
