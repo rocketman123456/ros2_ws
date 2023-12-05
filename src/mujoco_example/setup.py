@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'example_py'
+package_name = 'mujoco_example'
 
 setup(
     name=package_name,
@@ -13,14 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='robotsky',
+    maintainer='rocketsky',
     maintainer_email='759094438@qq.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            "node_02 = example_py.node_02:main",
+            "mujoco_base = mujoco_example.mujoco_base:main",
         ],
     },
 )
