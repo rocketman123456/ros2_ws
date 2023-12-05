@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>action_tutorials_py</name>
+  <name>example_action_py</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="759094438@qq.com">rocketsky</maintainer>
   <license>Apache License 2.0</license>
 
-  <depend>action_tutorials_interfaces</depend>
+  <depend>example_action_interfaces</depend>
   <depend>rclpy</depend>
   <depend>rclpy_action</depend>
   <depend>rclpy_components</depend>

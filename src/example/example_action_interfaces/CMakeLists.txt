@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(action_tutorials_interfaces)
+project(example_action_interfaces)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)

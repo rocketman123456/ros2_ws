@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(action_tutorials_cpp)
+project(example_action_cpp)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -37,7 +37,7 @@ ament_target_dependencies(action_server
   "rclcpp_action"
   "rclcpp_components"
 )
-rclcpp_components_register_node(action_server PLUGIN "action_tutorials_cpp::FibonacciActionServer" EXECUTABLE fibonacci_action_server)
+rclcpp_components_register_node(action_server PLUGIN "example_action_cpp::FibonacciActionServer" EXECUTABLE fibonacci_action_server)
 install(TARGETS
   action_server
   ARCHIVE DESTINATION lib
@@ -60,7 +60,7 @@ ament_target_dependencies(action_client
   "rclcpp_action"
   "rclcpp_components"
 )
-rclcpp_components_register_node(action_client PLUGIN "action_tutorials_cpp::FibonacciActionClient" EXECUTABLE fibonacci_action_client)
+rclcpp_components_register_node(action_client PLUGIN "example_action_cpp::FibonacciActionClient" EXECUTABLE fibonacci_action_client)
 install(TARGETS
   action_client
   ARCHIVE DESTINATION lib
