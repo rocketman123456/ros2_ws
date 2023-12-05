@@ -91,14 +91,228 @@ namespace mr
      */
     bool IKinSpace(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double);
 
-    // TODO : multi ik algorithm
+    /*
+     * Function: Computes inverse kinematics in the body frame for an open chain robot
+     * Inputs:
+     *	Blist: The joint screw axes in the end-effector frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
     bool IKinBodyPseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double);
+
+    /*
+     * Function: Computes inverse kinematics in the space frame for an open chain robot
+     * Inputs:
+     *	Slist: The joint screw axes in the space frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
     bool IKinSpacePseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double);
+
+    /*
+     * Function: Computes inverse kinematics in the body frame for an open chain robot
+     * Inputs:
+     *	Blist: The joint screw axes in the end-effector frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *  lamb: damp parameter
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
     bool IKinBodyDamped(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double);
+
+    /*
+     * Function: Computes inverse kinematics in the space frame for an open chain robot
+     * Inputs:
+     *	Slist: The joint screw axes in the space frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *  lamb: damp parameter
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
     bool IKinSpaceDamped(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double);
+
+    /*
+     * Function: Computes inverse kinematics in the body frame for an open chain robot
+     * Inputs:
+     *	Blist: The joint screw axes in the end-effector frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *  lamb1: damp parameter
+     *  lamb2: damp parameter
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
     bool IKinBodyDampedPseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double, double);
+
+    /*
+     * Function: Computes inverse kinematics in the space frame for an open chain robot
+     * Inputs:
+     *	Slist: The joint screw axes in the space frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *  lamb1: damp parameter
+     *  lamb2: damp parameter
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
     bool IKinSpaceDampedPseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double, double);
-    bool IKinBodyDampedLeastSquare(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, const Eigen::MatrixXd&, double, double);
-    bool IKinSpaceDampedLeastSquare(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, const Eigen::MatrixXd&, double, double);
+
+    /*
+     * Function: Computes inverse kinematics in the body frame for an open chain robot
+     * Inputs:
+     *	Blist: The joint screw axes in the end-effector frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *  lamb: damp parameter
+     *  W: damp matrix
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
+    bool IKinBodyDampedLeastSquare(const Eigen::MatrixXd&,
+                                   const Eigen::MatrixXd&,
+                                   const Eigen::MatrixXd&,
+                                   Eigen::VectorXd&,
+                                   double,
+                                   const Eigen::MatrixXd&,
+                                   double,
+                                   double);
+
+    /*
+     * Function: Computes inverse kinematics in the space frame for an open chain robot
+     * Inputs:
+     *	Slist: The joint screw axes in the space frame when the
+     *         manipulator is at the home position, in the format of a
+     *         matrix with axes as the columns
+     *	M: The home configuration of the end-effector
+     *	T: The desired end-effector configuration Tsd
+     *	thetalist[in][out]: An initial guess and result output of joint angles that are close to
+     *         satisfying Tsd
+     *  lamb: damp parameter
+     *  W: damp matrix
+     *	emog: A small positive tolerance on the end-effector orientation
+     *        error. The returned joint angles must give an end-effector
+     *        orientation error less than eomg
+     *	ev: A small positive tolerance on the end-effector linear position
+     *      error. The returned joint angles must give an end-effector
+     *      position error less than ev
+     * Outputs:
+     *	success: A logical value where TRUE means that the function found
+     *           a solution and FALSE means that it ran through the set
+     *           number of maximum iterations without finding a solution
+     *           within the tolerances eomg and ev.
+     *	thetalist[in][out]: Joint angles that achieve T within the specified tolerances,
+     */
+    bool IKinSpaceDampedLeastSquare(const Eigen::MatrixXd&,
+                                    const Eigen::MatrixXd&,
+                                    const Eigen::MatrixXd&,
+                                    Eigen::VectorXd&,
+                                    double,
+                                    const Eigen::MatrixXd&,
+                                    double,
+                                    double);
 
 } // namespace mr

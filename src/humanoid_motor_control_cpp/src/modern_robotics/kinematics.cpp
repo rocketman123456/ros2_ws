@@ -137,19 +137,279 @@ namespace mr
         return !err;
     }
 
-    bool IKinBodyPseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double) {}
+    bool
+    IKinBodyPseudoInverse(const Eigen::MatrixXd& Blist, const Eigen::MatrixXd& M, const Eigen::MatrixXd& T, Eigen::VectorXd& thetalist, double eomg, double ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinBody(M, Blist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vb            = se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vb(0), Vb(1), Vb(2));
+        Eigen::Vector3d linear(Vb(3), Vb(4), Vb(5));
 
-    bool IKinSpacePseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double) {}
+        bool            err = (angular.norm() > eomg || linear.norm() > ev);
+        Eigen::MatrixXd Jb;
+        while (err && i < maxiterations)
+        {
+            Jb = JacobianBody(Blist, thetalist);
+            thetalist += Jb.transpose() * (Jb * Jb.transpose()).bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Vb);
+            i += 1;
+            // iterate
+            Tfk     = FKinBody(M, Blist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vb      = se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vb(0), Vb(1), Vb(2));
+            linear  = Eigen::Vector3d(Vb(3), Vb(4), Vb(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
 
-    bool IKinBodyDamped(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double) {}
+    bool
+    IKinSpacePseudoInverse(const Eigen::MatrixXd& Slist, const Eigen::MatrixXd& M, const Eigen::MatrixXd& T, Eigen::VectorXd& thetalist, double eomg, double ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinSpace(M, Slist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vs            = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vs(0), Vs(1), Vs(2));
+        Eigen::Vector3d linear(Vs(3), Vs(4), Vs(5));
 
-    bool IKinSpaceDamped(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double) {}
+        bool            err = (angular.norm() > eomg || linear.norm() > ev);
+        Eigen::MatrixXd Js;
+        while (err && i < maxiterations)
+        {
+            Js = JacobianSpace(Slist, thetalist);
+            thetalist += Js.transpose() * (Js * Js.transpose()).bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Vs);
+            i += 1;
+            // iterate
+            Tfk     = FKinSpace(M, Slist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vs      = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vs(0), Vs(1), Vs(2));
+            linear  = Eigen::Vector3d(Vs(3), Vs(4), Vs(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
 
-    bool IKinBodyDampedPseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double, double) {}
+    // TODO : add line search version
+    bool IKinBodyDamped(const Eigen::MatrixXd& Blist,
+                        const Eigen::MatrixXd& M,
+                        const Eigen::MatrixXd& T,
+                        Eigen::VectorXd&       thetalist,
+                        double                 lamb,
+                        double                 eomg,
+                        double                 ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinBody(M, Blist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vb            = se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vb(0), Vb(1), Vb(2));
+        Eigen::Vector3d linear(Vb(3), Vb(4), Vb(5));
 
-    bool IKinSpaceDampedPseudoInverse(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, double, double, double) {}
+        bool            err = (angular.norm() > eomg || linear.norm() > ev);
+        Eigen::MatrixXd Jb;
+        while (err && i < maxiterations)
+        {
+            Jb = JacobianBody(Blist, thetalist);
+            thetalist += lamb * Jb.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Vb);
+            i += 1;
+            // iterate
+            Tfk     = FKinBody(M, Blist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vb      = se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vb(0), Vb(1), Vb(2));
+            linear  = Eigen::Vector3d(Vb(3), Vb(4), Vb(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
 
-    bool IKinBodyDampedLeastSquare(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, const Eigen::MatrixXd&, double, double) {}
+    // TODO : add line search version
+    bool IKinSpaceDamped(const Eigen::MatrixXd& Slist,
+                         const Eigen::MatrixXd& M,
+                         const Eigen::MatrixXd& T,
+                         Eigen::VectorXd&       thetalist,
+                         double                 lamb,
+                         double                 eomg,
+                         double                 ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinSpace(M, Slist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vs            = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vs(0), Vs(1), Vs(2));
+        Eigen::Vector3d linear(Vs(3), Vs(4), Vs(5));
 
-    bool IKinSpaceDampedLeastSquare(const Eigen::MatrixXd&, const Eigen::MatrixXd&, const Eigen::MatrixXd&, Eigen::VectorXd&, double, const Eigen::MatrixXd&, double, double) {}
-} // namespace me
+        bool            err = (angular.norm() > eomg || linear.norm() > ev);
+        Eigen::MatrixXd Js;
+        while (err && i < maxiterations)
+        {
+            Js = JacobianSpace(Slist, thetalist);
+            thetalist += lamb * Js.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(Vs);
+            i += 1;
+            // iterate
+            Tfk     = FKinSpace(M, Slist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vs      = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vs(0), Vs(1), Vs(2));
+            linear  = Eigen::Vector3d(Vs(3), Vs(4), Vs(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
+
+    bool IKinBodyDampedPseudoInverse(const Eigen::MatrixXd& Blist,
+                                     const Eigen::MatrixXd& M,
+                                     const Eigen::MatrixXd& T,
+                                     Eigen::VectorXd&       thetalist,
+                                     double                 lamb1,
+                                     double                 lamb2,
+                                     double                 eomg,
+                                     double                 ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinBody(M, Blist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vb            = se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vb(0), Vb(1), Vb(2));
+        Eigen::Vector3d linear(Vb(3), Vb(4), Vb(5));
+
+        bool            err  = (angular.norm() > eomg || linear.norm() > ev);
+        auto            flag = Eigen::ComputeThinU | Eigen::ComputeThinV;
+        Eigen::MatrixXd Jb;
+        while (err && i < maxiterations)
+        {
+            Jb = JacobianBody(Blist, thetalist);
+            thetalist += lamb2 * Jb.transpose() * (Jb * Jb.transpose() + lamb1 * Eigen::MatrixXd::Identity(Jb.rows(), Jb.rows())).bdcSvd(flag).solve(Vb);
+            i += 1;
+            // iterate
+            Tfk     = FKinBody(M, Blist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vb      = se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vb(0), Vb(1), Vb(2));
+            linear  = Eigen::Vector3d(Vb(3), Vb(4), Vb(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
+
+    bool IKinSpaceDampedPseudoInverse(const Eigen::MatrixXd& Slist,
+                                      const Eigen::MatrixXd& M,
+                                      const Eigen::MatrixXd& T,
+                                      Eigen::VectorXd&       thetalist,
+                                      double                 lamb1,
+                                      double                 lamb2,
+                                      double                 eomg,
+                                      double                 ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinSpace(M, Slist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vs            = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vs(0), Vs(1), Vs(2));
+        Eigen::Vector3d linear(Vs(3), Vs(4), Vs(5));
+
+        bool            err  = (angular.norm() > eomg || linear.norm() > ev);
+        auto            flag = Eigen::ComputeThinU | Eigen::ComputeThinV;
+        Eigen::MatrixXd Js;
+        while (err && i < maxiterations)
+        {
+            Js = JacobianSpace(Slist, thetalist);
+            thetalist += lamb2 * Js.transpose() * (Js * Js.transpose() + lamb1 * Eigen::MatrixXd::Identity(Js.rows(), Js.rows())).bdcSvd(flag).solve(Vs);
+            i += 1;
+            // iterate
+            Tfk     = FKinSpace(M, Slist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vs      = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vs(0), Vs(1), Vs(2));
+            linear  = Eigen::Vector3d(Vs(3), Vs(4), Vs(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
+
+    bool IKinBodyDampedLeastSquare(const Eigen::MatrixXd& Blist,
+                                   const Eigen::MatrixXd& M,
+                                   const Eigen::MatrixXd& T,
+                                   Eigen::VectorXd&       thetalist,
+                                   double                 lamb,
+                                   const Eigen::MatrixXd& W,
+                                   double                 eomg,
+                                   double                 ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinBody(M, Blist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vb            = se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vb(0), Vb(1), Vb(2));
+        Eigen::Vector3d linear(Vb(3), Vb(4), Vb(5));
+
+        bool            err  = (angular.norm() > eomg || linear.norm() > ev);
+        auto            flag = Eigen::ComputeThinU | Eigen::ComputeThinV;
+        Eigen::MatrixXd Jb;
+        Eigen::MatrixXd JJT;
+        while (err && i < maxiterations)
+        {
+            Jb  = JacobianBody(Blist, thetalist);
+            JJT = Jb.transpose() * W * Jb + lamb * Eigen::MatrixXd::Identity(Jb.cols(), Jb.cols());
+            thetalist += JJT.bdcSvd(flag).solve(Jb.transpose() * W * Vb);
+            i += 1;
+            // iterate
+            Tfk     = FKinBody(M, Blist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vb      = se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vb(0), Vb(1), Vb(2));
+            linear  = Eigen::Vector3d(Vb(3), Vb(4), Vb(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
+
+    bool IKinSpaceDampedLeastSquare(const Eigen::MatrixXd& Slist,
+                                    const Eigen::MatrixXd& M,
+                                    const Eigen::MatrixXd& T,
+                                    Eigen::VectorXd&       thetalist,
+                                    double                 lamb,
+                                    const Eigen::MatrixXd& W,
+                                    double                 eomg,
+                                    double                 ev)
+    {
+        int             i             = 0;
+        int             maxiterations = 20;
+        Eigen::MatrixXd Tfk           = FKinSpace(M, Slist, thetalist);
+        Eigen::MatrixXd Tdiff         = TransInv(Tfk) * T;
+        Eigen::VectorXd Vs            = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+        Eigen::Vector3d angular(Vs(0), Vs(1), Vs(2));
+        Eigen::Vector3d linear(Vs(3), Vs(4), Vs(5));
+
+        bool            err = (angular.norm() > eomg || linear.norm() > ev);
+        auto            flag = Eigen::ComputeThinU | Eigen::ComputeThinV;
+        Eigen::MatrixXd Js;
+        Eigen::MatrixXd JJT;
+        while (err && i < maxiterations)
+        {
+            Js = JacobianSpace(Slist, thetalist);
+            JJT = Js.transpose() * W * Js + lamb * Eigen::MatrixXd::Identity(Js.cols(), Js.cols());
+            thetalist += JJT.bdcSvd(flag).solve(Js.transpose() * W * Vs);
+            i += 1;
+            // iterate
+            Tfk     = FKinSpace(M, Slist, thetalist);
+            Tdiff   = TransInv(Tfk) * T;
+            Vs      = Adjoint(Tfk) * se3ToVec(MatrixLog6(Tdiff));
+            angular = Eigen::Vector3d(Vs(0), Vs(1), Vs(2));
+            linear  = Eigen::Vector3d(Vs(3), Vs(4), Vs(5));
+            err     = (angular.norm() > eomg || linear.norm() > ev);
+        }
+        return !err;
+    }
+} // namespace mr
