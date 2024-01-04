@@ -19,8 +19,7 @@ namespace Rocket
 
     struct LocalGridData
     {
-        std::vector<float>           height_map;
-        std::vector<Eigen::Vector3f> position_map;
+        std::vector<Eigen::Vector3f> height_map; // position in local grid map coordinate
     };
 
     class LocalMapBuilder
@@ -39,8 +38,10 @@ namespace Rocket
         void generateLocalMap();
         void blendPrevLocalMap();
 
+        // utils
         Eigen::Matrix4f projectPoseToGround(const Eigen::Matrix4f& pose);
         bool            projectGridIndexCalculate(double x, double y, size_t* nx, size_t* ny);
+        bool            projectGridIndexCalculate(const Eigen::Vector3f& pos, size_t* nx, size_t* ny);
 
     private:
         LocalGridConfig m_grid_config;

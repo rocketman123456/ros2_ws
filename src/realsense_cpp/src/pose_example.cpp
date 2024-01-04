@@ -74,9 +74,10 @@ try
             // Wait for the next set of frames from the camera
             auto frames = t265_pipe.wait_for_frames();
             // Get a frame from the pose stream
-            auto f = frames.first_or_default(RS2_STREAM_POSE);
+            //auto f = frames.first_or_default(RS2_STREAM_POSE);
             // Cast the frame to pose_frame and get its data
-            auto pose_data = f.as<rs2::pose_frame>().get_pose_data();
+            auto pose = frames.get_pose_frame();
+            auto pose_data = pose.get_pose_data();
 
             // Print the x, y, z values of the translation, relative to initial position
             std::cout << "\r"
@@ -85,10 +86,9 @@ try
         }
 
         {
-
             // Wait for the next set of frames from the camera
             // Block program until frames arrive
-            frames = d435_pipe.wait_for_frames();
+            auto frames = d435_pipe.wait_for_frames();
             frames = align_to_color.process(frames);
 
             // Try to get a frame of a depth image
@@ -101,7 +101,7 @@ try
             filtered_frame      = spat_filter.process(filtered_frame);
             filtered_frame      = temp_filter.process(filtered_frame);
 
-            rs2::video_frame colorized_depth = color_map.process(filtered_frame);
+            // rs2::video_frame colorized_depth = color_map.process(filtered_frame);
 
             // Creating OpenCV Matrix from a color image
             // cv::Mat color(cv::Size(640, 480), CV_8UC3, (void*)color_frame.get_data(), cv::Mat::AUTO_STEP);

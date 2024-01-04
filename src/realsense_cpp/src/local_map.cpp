@@ -50,4 +50,16 @@ namespace Rocket
         *ny = fmod(y - m_grid_y1, m_grid_config.m_grid_size_y);
         return true;
     }
+
+    bool LocalMapBuilder::projectGridIndexCalculate(const Eigen::Vector3f& pos, size_t* nx, size_t* ny)
+    {
+        if (pos[0] < m_grid_x1 && pos[1] < m_grid_y1)
+            return false;
+        else if (pos[0] > m_grid_x2 && pos[1] > m_grid_y2)
+            return false;
+
+        *nx = fmod(pos[0] - m_grid_x1, m_grid_config.m_grid_size_x);
+        *ny = fmod(pos[1] - m_grid_y1, m_grid_config.m_grid_size_y);
+        return true;
+    }
 } // namespace Rocket

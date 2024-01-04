@@ -40,12 +40,16 @@ add_executable(humanoid_motor_example
 )
 ament_target_dependencies(humanoid_motor_example rclcpp Eigen3)
 
-ament_export_dependencies(eigen3_cmake_module)
-ament_export_dependencies(Eigen3)
-
+# Install binaries
 install(TARGETS 
   humanoid_motor_example
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install headers
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
 install(DIRECTORY launch
@@ -56,5 +60,9 @@ if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# Ament exports
+ament_export_dependencies(eigen3_cmake_module)
+ament_export_dependencies(Eigen3)
 
 ament_package()

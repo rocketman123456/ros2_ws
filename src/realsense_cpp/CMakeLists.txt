@@ -36,17 +36,25 @@ target_link_libraries(pose_example
   
 ament_target_dependencies(pose_example rclcpp Eigen3)
 
-ament_export_dependencies(eigen3_cmake_module)
-ament_export_dependencies(Eigen3)
-
+# Install binaries
 install(TARGETS 
   pose_example
   DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install headers
+install(
+  DIRECTORY include/
+  DESTINATION include
 )
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# Ament exports
+ament_export_dependencies(eigen3_cmake_module)
+ament_export_dependencies(Eigen3)
 
 ament_package()
