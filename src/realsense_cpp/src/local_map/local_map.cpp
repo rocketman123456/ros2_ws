@@ -1,10 +1,10 @@
-#include "realsense_cpp/local_map.h"
+#include "local_map/local_map.h"
 
 #include <cmath>
 
 namespace Rocket
 {
-    LocalMapBuilder::LocalMapBuilder(const LocalGridConfig& config, float alpha) {}
+    LocalMapBuilder::LocalMapBuilder(const LocalMapConfig& config, float alpha) {}
 
     void LocalMapBuilder::initialize(float* points, size_t count) {}
 

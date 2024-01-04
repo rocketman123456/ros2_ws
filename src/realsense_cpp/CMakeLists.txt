@@ -28,6 +28,7 @@ include_directories(${Eigen3_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 add_executable(pose_example
   src/pose_example.cpp
+  src/local_map/local_map.cpp
 )
 
 target_link_libraries(pose_example

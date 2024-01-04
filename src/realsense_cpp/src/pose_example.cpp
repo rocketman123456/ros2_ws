@@ -1,8 +1,11 @@
 // License: Apache 2.0. See LICENSE file in root directory.
 // Copyright(c) 2019 Intel Corporation. All Rights Reserved.
+#include "local_map/local_map.h"
+
+#include <librealsense2/rs.hpp>
+
 #include <iomanip>
 #include <iostream>
-#include <librealsense2/rs.hpp>
 #include <string>
 #include <vector>
 
@@ -67,16 +70,59 @@ try
     rs2::pointcloud pc;     // Declare pointcloud object, for calculating pointclouds and texture mappings
     rs2::points     points; // We want the points object to be persistent so we can display the last cloud when a frame drops
 
+    std::vector<rs2_vector> trajectory; // store pose and timestamp
+
+    std::vector<Eigen::Vector3f> point_cloud;
+
+    Rocket::LocalMapConfig  map_config;
+    Rocket::LocalMapBuilder builder(map_config);
+
+    // wait some frames to stabilize the system
+    for (int i = 0; i < 30; ++i)
+    {
+        // Wait for the next set of frames from the camera
+        auto t265_frames = t265_pipe.wait_for_frames();
+        // Wait for the next set of frames from the camera
+        auto d435_frames = d435_pipe.wait_for_frames();
+    }
+
+    // initialize
+    {
+        // Wait for the next set of frames from the camera
+        auto t265_frames = t265_pipe.wait_for_frames();
+        // Wait for the next set of frames from the camera
+        auto d435_frames = d435_pipe.wait_for_frames();
+
+        auto pose      = t265_frames.get_pose_frame();
+        auto pose_data = pose.get_pose_data();
+
+        // Try to get a frame of a depth image
+        rs2::frame color_frame = d435_frames.get_color_frame();
+        rs2::frame depth_frame = d435_frames.get_depth_frame();
+
+        // auto filtered = dec_filter.process(depth_frame);
+        auto filtered_frame = thr_filter.process(depth_frame);
+        filtered_frame      = spat_filter.process(filtered_frame);
+        filtered_frame      = temp_filter.process(filtered_frame);
+
+        pc.map_to(color_frame);                               // Tell pointcloud object to map to this color frame
+        points            = pc.calculate(filtered_frame);     // Generate the pointcloud and texture mappings
+        auto   vertices   = points.get_vertices();            // get vertices
+        auto   tex_coords = points.get_texture_coordinates(); // and texture coordinates
+        float* points_ptr = (float*)(vertices);
+
+        point_cloud.resize(points.size());
+        memcpy(point_cloud.data(), vertices, points.size() * 3 * sizeof(float));
+    }
+
     // Main loop
     while (true)
     {
         {
             // Wait for the next set of frames from the camera
             auto frames = t265_pipe.wait_for_frames();
-            // Get a frame from the pose stream
-            //auto f = frames.first_or_default(RS2_STREAM_POSE);
             // Cast the frame to pose_frame and get its data
-            auto pose = frames.get_pose_frame();
+            auto pose      = frames.get_pose_frame();
             auto pose_data = pose.get_pose_data();
 
             // Print the x, y, z values of the translation, relative to initial position
@@ -89,7 +135,7 @@ try
             // Wait for the next set of frames from the camera
             // Block program until frames arrive
             auto frames = d435_pipe.wait_for_frames();
-            frames = align_to_color.process(frames);
+            frames      = align_to_color.process(frames);
 
             // Try to get a frame of a depth image
             rs2::frame color_frame = frames.get_color_frame();
@@ -121,6 +167,11 @@ try
                     // TODO
                 }
             }
+
+            std::cout << "points count: " << points.size() << std::endl;
+
+            point_cloud.resize(points.size());
+            memcpy(point_cloud.data(), vertices, points.size() * 3 * sizeof(float));
 
             // equalizeHist(ir, ir);
             // applyColorMap(ir, ir, cv::COLORMAP_JET);
